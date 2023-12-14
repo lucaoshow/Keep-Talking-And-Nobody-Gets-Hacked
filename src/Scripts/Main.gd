@@ -2,9 +2,6 @@ extends Node2D
 
 @onready var firstWindow : Terminal = Terminal.new(1, 1)
 
-func _process(delta):
-	pass
-
 
 func _on_start_timeout():
 	firstWindow.position = Vector2(520,307) # idk random position to test
