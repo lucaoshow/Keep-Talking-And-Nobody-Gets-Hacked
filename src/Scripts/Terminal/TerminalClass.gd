@@ -91,13 +91,13 @@ func _enterCommand(newText : String):
 	var windowText = super.getWindowText()
 	if super.textIsBiggerThanWindow():
 		var charsToDelete : int = windowText.find("\n") + 1
-		super.setWindowText(_windowText.text.erase(0, charsToDelete))
-	
+		super.setWindowText(windowText.erase(0, charsToDelete))
+
 	else:
 		_typingSpace.position.y += _OnEnterCommandYOffset
 		placeholder.position.y += _OnEnterCommandYOffset
 
-	super.setWindowText(windowText + newText + "\n")
+	super.setWindowText(super.getWindowText() + newText + "\n")
 	placeholder.text = "clear" # remove this line in order to stop setting "clear" as the suggested command
 	_erasedChars.clear()
 	_lastTextLength = len(_TERMINAL_PATH)
