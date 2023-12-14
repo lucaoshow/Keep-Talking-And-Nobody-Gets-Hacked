@@ -1,7 +1,9 @@
 extends Node2D
 class_name WindowDisplay
 
-const _TERMINAL_PATH : String = "C:\\WINDOWS\\System32\\"
+var placeholder : Label
+
+const _TERMINAL_PATH : String = "C:\\WINDOWS\\System32>"
 const _WINDOW_LIMIT_OFFSET : float = 100
 
 enum States {IDLE = 1, RESIZING, MOVING}
@@ -16,7 +18,9 @@ var _targetScaleY : float
 var _t : float
 var _targetPosition : Vector2
 var _elapsedTime : float
-var _yOffsetTypingSpace : float
+var _erasedChars : Array[String]
+var _OnEnterCommandYOffset : float
+var _lastTextLength : int = len(_TERMINAL_PATH)
 
 
 # CONSTRUCTOR
@@ -39,12 +43,18 @@ func _init(widthScale : float, heightScale : float, typeable : bool = true,
 		WindowUtils.configureWindowTextObj(_typingSpace, font, fontSize, reference)
 		_typingSpace.text = _TERMINAL_PATH
 		
-		_typingSpace.connect("text_changed", _blockterminalPathErasing)
+		_typingSpace.connect("text_changed", _checkTypedChar)
 		_typingSpace.connect("text_submitted", _enterCommand)
 		
 		_windowSprite.add_child(_typingSpace)
 		
-		_yOffsetTypingSpace = _windowText.size.y
+		_OnEnterCommandYOffset = _windowText.size.y
+		
+		placeholder = Label.new()
+		WindowUtils.configureWindowTextObj(placeholder, font, fontSize, reference, true)
+		placeholder.text = "clear"
+		
+		_windowSprite.add_child(placeholder)
 	else:
 		_typingSpace.free()
 
@@ -101,6 +111,20 @@ func _textIsBiggerThanWindow():
 	var windowRect = _windowSprite.get_rect() 
 	return textRect.position.y + textRect.size.y + _WINDOW_LIMIT_OFFSET >= windowRect.position.y + windowRect.size.y
 
+
+func _erasePlaceholder(index : int):
+	if index < len(placeholder.text):
+		_erasedChars.append(placeholder.text[index])
+		placeholder.text[index] = "_"
+
+
+func _returnPlaceholderChar(index : int):
+	if index < len(placeholder.text):
+		placeholder.text[index] = _erasedChars[-1]
+		_erasedChars.pop_back()
+		
+
+
 # UPDATE PER FRAME
 
 func _process(delta):
@@ -121,9 +145,24 @@ func _input(event):
 
 # CALLABLES FOR SIGNALS
 
-func _blockterminalPathErasing(newText : String):
+func _checkTypedChar(newText : String):
 	if !_typingSpace.text.begins_with(_TERMINAL_PATH):
 		_resetTerminalText()
+		return
+
+	var pathTotalChars : int = len(_TERMINAL_PATH) - 1
+	var pathLength : int = len(_TERMINAL_PATH)
+	var lastChar : String = _typingSpace.text[-1]
+	var charIndex : int = _typingSpace.text.rfind(lastChar)
+
+	var newTextLength = len(newText)
+	if _lastTextLength > newTextLength:
+		_returnPlaceholderChar(charIndex - pathTotalChars)
+		
+	elif charIndex > pathTotalChars:
+		_erasePlaceholder(charIndex - pathLength)
+
+	_lastTextLength = newTextLength
 
 
 func _enterCommand(newText : String):
@@ -132,6 +171,9 @@ func _enterCommand(newText : String):
 		var charsToDelete : int = _windowText.text.find("\n") + 1
 		_windowText.text = _windowText.text.erase(0, charsToDelete)
 	else:
-		_typingSpace.position.y += _yOffsetTypingSpace
+		_typingSpace.position.y += _OnEnterCommandYOffset
+		placeholder.position.y += _OnEnterCommandYOffset
 
 	_windowText.text += newText + "\n"
+	placeholder.text = "clear" # remove this line in order to stop setting "clear" as the suggested command
+	_erasedChars.clear()
