@@ -14,7 +14,7 @@ var _elapsedTime : float
 
 
 # change the standard sprite later
-func _init(width : float, height : float, windowTexture : CompressedTexture2D = preload("res://Assets/Window/test_sprite.svg")):
+func _init(width : float, height : float, windowTexture : CompressedTexture2D = preload("res://Assets/Terminal/terminal.png")):
 	_windowSprite.scale.x = width
 	_windowSprite.scale.y = height
 	_windowSprite.texture = windowTexture

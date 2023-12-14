@@ -1,13 +1,13 @@
 extends Node2D
 
-@onready var firstWindow = WindowDisplay.new(2, 2)
+@onready var firstWindow = WindowDisplay.new(1, 1)
 
 func _process(delta):
 	pass
 
 
 func _on_start_timeout():
-	firstWindow.position = Vector2(515,307) # idk random position to test
+	firstWindow.position = Vector2(520,307) # idk random position to test
 	add_child(firstWindow)
 	$Move.start()
 	$Resize.start()
