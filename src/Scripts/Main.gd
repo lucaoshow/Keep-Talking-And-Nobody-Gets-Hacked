@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var firstWindow = WindowDisplay.new(1, 1)
+@onready var firstWindow : Terminal = Terminal.new(1, 1)
 
 func _process(delta):
 	pass

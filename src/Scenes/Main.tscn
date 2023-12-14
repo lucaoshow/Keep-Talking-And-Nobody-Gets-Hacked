@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Scripts/Main.gd" id="1_hlalw"]
 [ext_resource type="Texture2D" uid="uid://ega7v0n13r1p" path="res://Assets/Wallpaper/background.jpg" id="2_6cu8s"]
 [ext_resource type="Texture2D" uid="uid://bg4u6da7ojcir" path="res://Assets/Wallpaper/taskbar.png" id="3_jqkse"]
-[ext_resource type="Script" path="res://Scripts/HourCounter.gd" id="4_ei0ga"]
+[ext_resource type="Script" path="res://Scripts/Hour/HourCounter.gd" id="4_ei0ga"]
 
 [sub_resource type="SystemFont" id="SystemFont_nh5yx"]
 font_names = PackedStringArray("Tahoma")

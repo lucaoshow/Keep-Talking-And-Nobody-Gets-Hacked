@@ -8,7 +8,7 @@ const _TYPING_SPACE_POS_OFFSET : Vector2 = Vector2(10, 40)
 const _PLACEHOLDER_POS_OFFSET : Vector2 = Vector2(260, 56)
 
 static func configureWindowTextObj(obj : Object, font : FontFile, fontSize : int, reference : Rect2,
-									usePlaceholderOffset : bool = false):
+									fontColor : Color, usePlaceholderOffset : bool = false):
 
 	obj.scale = _PIXELATE_TEXT_SCALE
 	obj.size = Vector2(reference.size.x - _SIZE_OFFSET, _SIZE_OFFSET)
@@ -16,6 +16,7 @@ static func configureWindowTextObj(obj : Object, font : FontFile, fontSize : int
 
 	obj.set("theme_override_constants/line_spacing", _WINDOW_TEXT_LINE_SPACING)
 	obj.set("theme_override_fonts/font", font)
+	obj.set("theme_override_colors/font_color", fontColor)
 	obj.set("theme_override_font_sizes/font_size", fontSize)
 	
 	if obj.is_class("LineEdit"):
