@@ -11,8 +11,15 @@ config_version=5
 [application]
 
 config/name="Onboarding-Inteli"
+run/main_scene="res://Scenes/Main.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
-config/icon="res://Assets/Window/test_sprite.svg"
+config/icon="res://Assets/Terminal/test_sprite.svg"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/resizable=false
 
 [rendering]
 
