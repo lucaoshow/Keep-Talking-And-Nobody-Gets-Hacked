@@ -57,10 +57,6 @@ script = ExtResource("4_ei0ga")
 
 [node name="Counter" type="Timer" parent="Taskbar/Hours"]
 
-[node name="LineEdit" type="LineEdit" parent="."]
-offset_right = 67.0625
-offset_bottom = 31.0
-
 [connection signal="timeout" from="Start" to="." method="_on_start_timeout"]
 [connection signal="timeout" from="Resize" to="." method="_on_resize_timeout"]
 [connection signal="timeout" from="Move" to="." method="_on_move_timeout"]
