@@ -2,6 +2,7 @@ extends Node2D
 class_name WindowDisplay
 
 const _TERMINAL_PATH : String = "C:\\WINDOWS\\System32\\"
+const _WINDOW_LIMIT_OFFSET : float = 100
 
 enum States {IDLE = 1, RESIZING, MOVING}
 var _currentState : States = States.IDLE
@@ -15,6 +16,8 @@ var _targetScaleY : float
 var _t : float
 var _targetPosition : Vector2
 var _elapsedTime : float
+var _yOffsetTypingSpace : float
+
 
 # CONSTRUCTOR
 
@@ -40,7 +43,8 @@ func _init(widthScale : float, heightScale : float, typeable : bool = true,
 		_typingSpace.connect("text_submitted", _enterCommand)
 		
 		_windowSprite.add_child(_typingSpace)
-
+		
+		_yOffsetTypingSpace = _windowText.size.y
 	else:
 		_typingSpace.free()
 
@@ -84,9 +88,18 @@ func _reposition(delta : float):
 
 
 func _resetTerminalText():
-	_typingSpace.text = _TERMINAL_PATH
-	_typingSpace.caret_column = len(_TERMINAL_PATH)
+	_typingSpace.text = _TERMINAL_PATH + _typingSpace.text.substr(len(_TERMINAL_PATH) - 1)
+	_typingSpace.caret_column = len(_typingSpace.text)
 
+
+func _isInsideWindow(pos : Vector2):
+	return _windowSprite.get_rect().has_point(pos)
+
+
+func _textIsBiggerThanWindow():
+	var textRect = _windowText.get_rect()
+	var windowRect = _windowSprite.get_rect() 
+	return textRect.position.y + textRect.size.y + _WINDOW_LIMIT_OFFSET >= windowRect.position.y + windowRect.size.y
 
 # UPDATE PER FRAME
 
@@ -98,15 +111,27 @@ func _process(delta):
 		_reposition(delta)
 
 
+# EVENT LISTENER
+
+func _input(event):
+	if event is InputEventMouseButton and _isInsideWindow(to_local(event.position)) and _typingSpace:
+		_typingSpace.grab_focus()
+		_typingSpace.caret_column = len(_typingSpace.text)
+
+
 # CALLABLES FOR SIGNALS
 
 func _blockterminalPathErasing(newText : String):
-	if len(_typingSpace.text) <= len(_TERMINAL_PATH):
+	if !_typingSpace.text.begins_with(_TERMINAL_PATH):
 		_resetTerminalText()
 
 
 func _enterCommand(newText : String):
-	_windowText.text += newText + "\n"
 	_typingSpace.clear()
-	_typingSpace.position.y += _typingSpace.size.y
-	_resetTerminalText()
+	if _textIsBiggerThanWindow():
+		var charsToDelete : int = _windowText.text.find("\n") + 1
+		_windowText.text = _windowText.text.erase(0, charsToDelete)
+	else:
+		_typingSpace.position.y += _yOffsetTypingSpace
+
+	_windowText.text += newText + "\n"
