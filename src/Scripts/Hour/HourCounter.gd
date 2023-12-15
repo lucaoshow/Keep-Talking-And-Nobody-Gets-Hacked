@@ -19,9 +19,10 @@ func updateText():
 	if currentMinute == 60:
 		currentMinute = 0
 		currentHour += 1
+
 	if currentHour > 23:
 		currentHour = 0
-	
+
 	self.text = str("%02d" % currentHour) + ":" + str("%02d" % currentMinute)
 
 

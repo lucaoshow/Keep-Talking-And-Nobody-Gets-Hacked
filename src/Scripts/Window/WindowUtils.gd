@@ -7,6 +7,7 @@ const _WINDOW_TEXT_LINE_SPACING : int = 10
 const _TYPING_SPACE_POS_OFFSET : Vector2 = Vector2(256, 40)
 const _PLACEHOLDER_POS_OFFSET : Vector2 = Vector2(262, 56)
 
+
 static func configureWindowTextObj(obj : Object, font : FontFile, fontSize : int, reference : Rect2,
 									fontColor : Color, usePlaceholderOffset : bool = false):
 

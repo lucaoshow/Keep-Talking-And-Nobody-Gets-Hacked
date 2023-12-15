@@ -34,6 +34,16 @@ func _init(widthScale : float, heightScale : float,
 	_windowSprite.add_child(_windowText)
 
 
+# UPDATE PER FRAME
+
+func _process(delta):
+	if _resizing:
+		_scale(delta)
+
+	if _moving:
+		_reposition(delta)
+
+
 # PUBLIC METHODS
 
 func resize(widthPercentage : float, heightPercentage : float, t : float):
@@ -105,12 +115,3 @@ func _reposition(delta : float):
 func _isInsideWindow(pos : Vector2):
 	return _windowSprite.get_rect().has_point(pos)
 
-
-# UPDATE PER FRAME
-
-func _process(delta):
-	if _resizing:
-		_scale(delta)
-
-	if _moving:
-		_reposition(delta)
