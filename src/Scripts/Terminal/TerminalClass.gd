@@ -2,35 +2,40 @@ extends WindowDisplay
 class_name Terminal
 
 
-const _TERMINAL_PATH : String = "C:\\WINDOWS\\System32>"
+const TERMINAL_PATH : String = "C:\\WINDOWS\\System32>"
 
+var _commandExecuter : Commands = Commands.new()
 var _placeholder : Label = Label.new()
 var _typingSpace : LineEdit = LineEdit.new()
 
 var _erasedChars : Array[String]
 var _OnEnterCommandYOffset : float
 var _lastTextLength : int
+var _originalTypingSpacePos : Vector2
+var _originalPlaceholderPos : Vector2
 
 func _init(widthScale : float, heightScale : float):
 	const texture : CompressedTexture2D = preload("res://Assets/Terminal/terminal.png")
-	const font : FontFile = preload("res://Assets/Terminal/CMD.ttf")
+	const font : FontFile = preload("res://Assets/Terminal/Determination.ttf")
 	const fontSize : int = 18
 	const placeholderFontColor : Color = Color8(242, 240, 228, 100)
 	const terminalFontColor : Color = Color8(242, 240, 228, 255)
 
 	super._init(widthScale, heightScale, texture, font, fontSize, terminalFontColor)
-	super.setWindowText(_TERMINAL_PATH)
+	super.setWindowText(TERMINAL_PATH)
 
 	var reference : Rect2 = super.getSpriteRect()
 	WindowUtils.configureWindowTextObj(_typingSpace, font, fontSize, reference, terminalFontColor)
-
+	_originalTypingSpacePos = _typingSpace.position
+	
 	_typingSpace.connect("text_changed", _checkTypedChar)
 	_typingSpace.connect("text_submitted", _enterCommand)
 
 	super.addChild(_typingSpace)
 
 	WindowUtils.configureWindowTextObj(_placeholder, font, fontSize, reference, placeholderFontColor, true)
-	_placeholder.text = "clear"
+	_placeholder.text = "help"
+	_originalPlaceholderPos = _placeholder.position
 
 	super.addChild(_placeholder)
 
@@ -41,6 +46,16 @@ func _init(widthScale : float, heightScale : float):
 
 func setPlaceholderText(text : String):
 	_placeholder.text = text
+
+
+func adjustYPos(offset : float):
+	_typingSpace.position.y += offset
+	_placeholder.position.y += offset
+
+
+func returnToOriginalPos():
+	_typingSpace.position = _originalTypingSpacePos
+	_placeholder.position = _originalPlaceholderPos
 
 
 # PRIVATE METHODS
@@ -89,9 +104,8 @@ func _enterCommand(newText : String):
 	else:
 		_typingSpace.position.y += _OnEnterCommandYOffset
 		_placeholder.position.y += _OnEnterCommandYOffset
-
-	super.setWindowText(super.getWindowText() + newText + "\n" + _TERMINAL_PATH)
-	_placeholder.text = "clear" # remove this line in order to stop setting "clear" as the suggested command
+	
+	_commandExecuter.executeCommand(newText, self)
 	_erasedChars.clear()
 	_lastTextLength = 0
 	_typingSpace.clear()

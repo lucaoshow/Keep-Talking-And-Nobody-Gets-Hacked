@@ -2,10 +2,12 @@ extends Node2D
 class_name WindowDisplay
 
 
-const _WINDOW_LIMIT_OFFSET : float = 30
+const _WINDOW_LIMIT_OFFSET : float = 50
+const _ENTER_Y_OFFSET : float = 43.5 
 
 var _moving : bool = false
 var _resizing : bool = false
+var _writing : bool = false
 
 var _windowSprite : Sprite2D = Sprite2D.new()
 var _windowText : Label = Label.new()
@@ -37,6 +39,9 @@ func _init(widthScale : float, heightScale : float,
 # UPDATE PER FRAME
 
 func _process(delta):
+	if _writing:
+		_checkWritingEnd()
+	
 	if _resizing:
 		_scale(delta)
 
@@ -64,7 +69,7 @@ func getSpriteRect():
 
 
 func getEnterYOffset():
-	return _windowText.size.y
+	return _ENTER_Y_OFFSET
 
 
 func getWindowText():
@@ -73,6 +78,12 @@ func getWindowText():
 
 func setWindowText(text : String):
 	_windowText.text = text
+
+
+func writeAnimatedText(text : String):
+	_windowText.visible_characters = len(_windowText.text)
+	_windowText.text += text
+	_writing = true
 
 
 func addChild(child : Object):
@@ -86,6 +97,14 @@ func textIsBiggerThanWindow():
 
 
 # PRIVATE METHODS
+
+func _checkWritingEnd():
+	if (_windowText.visible_characters == len(_windowText.text)):
+		_windowText.visible_characters = -1
+		_writing = false
+		return
+	_windowText.visible_characters += 3
+
 
 func _checkActionFinished(t : float):
 	if _elapsedTimeResize >= t and t == _tResize:
