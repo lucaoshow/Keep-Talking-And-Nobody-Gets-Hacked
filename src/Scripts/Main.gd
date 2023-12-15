@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var firstWindow : Terminal = Terminal.new(1, 1)
+@onready var firstWindow : Terminal = Terminal.new()
 
 
 func _on_start_timeout():

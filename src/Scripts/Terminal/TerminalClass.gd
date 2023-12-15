@@ -3,6 +3,7 @@ class_name Terminal
 
 
 const TERMINAL_PATH : String = "C:\\WINDOWS\\System32>"
+const _TYPING_SPACE_LIMIT_OFFSET : float = 330
 
 var _commandExecuter : Commands = Commands.new()
 var _placeholder : Label = Label.new()
@@ -14,14 +15,14 @@ var _lastTextLength : int
 var _originalTypingSpacePos : Vector2
 var _originalPlaceholderPos : Vector2
 
-func _init(widthScale : float, heightScale : float):
+func _init():
 	const texture : CompressedTexture2D = preload("res://Assets/Terminal/terminal.png")
 	const font : FontFile = preload("res://Assets/Terminal/Determination.ttf")
 	const fontSize : int = 18
+	const terminalFontColor : Color = Color8(242, 240, 228, 255)	
 	const placeholderFontColor : Color = Color8(242, 240, 228, 100)
-	const terminalFontColor : Color = Color8(242, 240, 228, 255)
 
-	super._init(widthScale, heightScale, texture, font, fontSize, terminalFontColor)
+	super._init(texture, font, fontSize, terminalFontColor)
 	super.setWindowText(TERMINAL_PATH)
 
 	var reference : Rect2 = super.getSpriteRect()
@@ -49,8 +50,9 @@ func setPlaceholderText(text : String):
 
 
 func adjustYPos(offset : float):
-	_typingSpace.position.y += offset
-	_placeholder.position.y += offset
+	if _textIsNotInTheEdge():
+		_typingSpace.position.y += offset
+		_placeholder.position.y += offset
 
 
 func returnToOriginalPos():
@@ -70,6 +72,21 @@ func _returnPlaceholderChar(index : int):
 	if index < len(_placeholder.text):
 		_placeholder.text[index] = _erasedChars[-1]
 		_erasedChars.pop_back()
+
+
+func _resetPlaceHolderText():
+	for i in range(len(_erasedChars)):
+		_placeholder.text[i] = _erasedChars[i]
+	_erasedChars.clear()
+
+
+func _resetTypingSpaceText():
+	_lastTextLength = 0
+	_typingSpace.clear()
+
+
+func _textIsNotInTheEdge():
+	return _typingSpace.position.y + _TYPING_SPACE_LIMIT_OFFSET < super.getSpriteHeight()
 
 
 # EVENT LISTENER
@@ -95,17 +112,11 @@ func _checkTypedChar(newText : String):
 
 
 func _enterCommand(newText : String):
-	var windowText = super.getWindowText()
-
-	if super.textIsBiggerThanWindow():
-		var charsToDelete : int = windowText.find("\n") + 1
-		super.setWindowText(windowText.erase(0, charsToDelete))
-
-	else:
+	if _textIsNotInTheEdge():
 		_typingSpace.position.y += _OnEnterCommandYOffset
 		_placeholder.position.y += _OnEnterCommandYOffset
-	
+
+	_resetPlaceHolderText()
+	_resetTypingSpaceText()
+
 	_commandExecuter.executeCommand(newText, self)
-	_erasedChars.clear()
-	_lastTextLength = 0
-	_typingSpace.clear()

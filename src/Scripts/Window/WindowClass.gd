@@ -2,8 +2,8 @@ extends Node2D
 class_name WindowDisplay
 
 
-const _WINDOW_LIMIT_OFFSET : float = 50
-const _ENTER_Y_OFFSET : float = 43.5 
+const _ENTER_Y_OFFSET : float = 43.5
+const _WINDOW_TEXT_LIMIT_OFFSET : float = 200
 
 var _moving : bool = false
 var _resizing : bool = false
@@ -23,12 +23,8 @@ var _elapsedTimeMove : float
 
 # CONSTRUCTOR
 
-func _init(widthScale : float, heightScale : float,
-			windowTexture : CompressedTexture2D,
-			font : FontFile, fontSize : int, fontColor):
+func _init(windowTexture : CompressedTexture2D, font : FontFile, fontSize : int, fontColor : Color):
 
-	_windowSprite.scale.x = widthScale
-	_windowSprite.scale.y = heightScale
 	_windowSprite.texture = windowTexture
 	add_child(_windowSprite)
 
@@ -48,6 +44,9 @@ func _process(delta):
 	if _moving:
 		_reposition(delta)
 
+	if _textIsBiggerThanWindow():
+		_eraseBeggining()
+
 
 # PUBLIC METHODS
 
@@ -64,8 +63,22 @@ func moveTo(pos : Vector2, t : float):
 	_moving = true
 
 
+func writeAnimatedText(text : String):
+	_windowText.visible_characters = len(_windowText.text)
+	_windowText.text += text
+	_writing = true
+
+
+func addChild(child : Object):
+	_windowSprite.add_child(child)
+
+
 func getSpriteRect():
 	return _windowSprite.get_rect()
+
+
+func getSpriteHeight():
+	return _windowSprite.texture.get_height()
 
 
 func getEnterYOffset():
@@ -80,40 +93,7 @@ func setWindowText(text : String):
 	_windowText.text = text
 
 
-func writeAnimatedText(text : String):
-	_windowText.visible_characters = len(_windowText.text)
-	_windowText.text += text
-	_writing = true
-
-
-func addChild(child : Object):
-	_windowSprite.add_child(child)
-
-
-func textIsBiggerThanWindow():
-	var textRect = _windowText.get_rect()
-	var windowRect = _windowSprite.get_rect() 
-	return textRect.position.y + textRect.size.y + _WINDOW_LIMIT_OFFSET >= windowRect.position.y + windowRect.size.y
-
-
 # PRIVATE METHODS
-
-func _checkWritingEnd():
-	if (_windowText.visible_characters == len(_windowText.text)):
-		_windowText.visible_characters = -1
-		_writing = false
-		return
-	_windowText.visible_characters += 3
-
-
-func _checkActionFinished(t : float):
-	if _elapsedTimeResize >= t and t == _tResize:
-		_resizing = false
-		_elapsedTimeResize = 0
-
-	if _elapsedTimeMove >= t and t == _tMove:
-		_moving = false
-		_elapsedTimeMove = 0
 
 
 func _scale(delta : float):
@@ -131,6 +111,32 @@ func _reposition(delta : float):
 	_checkActionFinished(_tMove)
 
 
+func _eraseBeggining():
+	var charsToDelete : int = _windowText.text.find("\n") + 1
+	setWindowText(_windowText.text.erase(0, charsToDelete))
+
+
 func _isInsideWindow(pos : Vector2):
 	return _windowSprite.get_rect().has_point(pos)
 
+
+func _textIsBiggerThanWindow():
+	return _windowText.size.y + _WINDOW_TEXT_LIMIT_OFFSET >= getSpriteHeight()
+
+
+func _checkActionFinished(t : float):
+	if _elapsedTimeResize >= t and t == _tResize:
+		_resizing = false
+		_elapsedTimeResize = 0
+
+	if _elapsedTimeMove >= t and t == _tMove:
+		_moving = false
+		_elapsedTimeMove = 0
+
+
+func _checkWritingEnd():
+	if _windowText.visible_characters == len(_windowText.text):
+		_windowText.visible_characters = -1
+		_writing = false
+		return
+	_windowText.visible_characters += 3
