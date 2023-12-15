@@ -2,7 +2,7 @@ extends Node2D
 class_name WindowDisplay
 
 
-const _WINDOW_LIMIT_OFFSET : float = 100
+const _WINDOW_LIMIT_OFFSET : float = 30
 
 var _moving : bool = false
 var _resizing : bool = false

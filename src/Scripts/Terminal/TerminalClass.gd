@@ -4,7 +4,7 @@ class_name Terminal
 
 const _TERMINAL_PATH : String = "C:\\WINDOWS\\System32>"
 
-var placeholder : Label = Label.new()
+var _placeholder : Label = Label.new()
 var _typingSpace : LineEdit = LineEdit.new()
 
 var _erasedChars : Array[String]
@@ -19,41 +19,41 @@ func _init(widthScale : float, heightScale : float):
 	const terminalFontColor : Color = Color8(242, 240, 228, 255)
 
 	super._init(widthScale, heightScale, texture, font, fontSize, terminalFontColor)
+	super.setWindowText(_TERMINAL_PATH)
 
 	var reference : Rect2 = super.getSpriteRect()
 	WindowUtils.configureWindowTextObj(_typingSpace, font, fontSize, reference, terminalFontColor)
-	_typingSpace.text = _TERMINAL_PATH
 
 	_typingSpace.connect("text_changed", _checkTypedChar)
 	_typingSpace.connect("text_submitted", _enterCommand)
 
 	super.addChild(_typingSpace)
 
-	WindowUtils.configureWindowTextObj(placeholder, font, fontSize, reference, placeholderFontColor, true)
-	placeholder.text = "clear"
+	WindowUtils.configureWindowTextObj(_placeholder, font, fontSize, reference, placeholderFontColor, true)
+	_placeholder.text = "clear"
 
-	super.addChild(placeholder)
+	super.addChild(_placeholder)
 
 	_OnEnterCommandYOffset = super.getEnterYOffset()
-	_lastTextLength = len(_TERMINAL_PATH)
+
+
+# PUBLIC METHODS
+
+func setPlaceholderText(text : String):
+	_placeholder.text = text
 
 
 # PRIVATE METHODS
 
-func _resetTerminalText():
-	_typingSpace.text = _TERMINAL_PATH + _typingSpace.text.substr(len(_TERMINAL_PATH) - 1)
-	_typingSpace.caret_column = len(_typingSpace.text)
-
-
 func _erasePlaceholder(index : int):
-	if index < len(placeholder.text):
-		_erasedChars.append(placeholder.text[index])
-		placeholder.text[index] = "_"
+	if index < len(_placeholder.text):
+		_erasedChars.append(_placeholder.text[index])
+		_placeholder.text[index] = "_"
 
 
 func _returnPlaceholderChar(index : int):
-	if index < len(placeholder.text):
-		placeholder.text[index] = _erasedChars[-1]
+	if index < len(_placeholder.text):
+		_placeholder.text[index] = _erasedChars[-1]
 		_erasedChars.pop_back()
 
 
@@ -68,35 +68,30 @@ func _input(event):
 # CALLABLES FOR SIGNALS
 
 func _checkTypedChar(newText : String):
-	if !_typingSpace.text.begins_with(_TERMINAL_PATH):
-		_resetTerminalText()
-		return
-
-	var newTextLength = len(newText)	
-	var pathTotalChars : int = len(_TERMINAL_PATH) - 1
-	var lastCharIndex : int = newTextLength - 1
+	var newTextLength = len(newText)
 
 	if _lastTextLength > newTextLength:
-		_returnPlaceholderChar(lastCharIndex - pathTotalChars)
+		_returnPlaceholderChar(newTextLength)
 
-	elif lastCharIndex > pathTotalChars:
-		_erasePlaceholder(lastCharIndex - len(_TERMINAL_PATH))
+	elif _lastTextLength < newTextLength:
+		_erasePlaceholder(newTextLength - 1)
 
 	_lastTextLength = newTextLength
 
 
 func _enterCommand(newText : String):
-	_typingSpace.clear()
 	var windowText = super.getWindowText()
+
 	if super.textIsBiggerThanWindow():
 		var charsToDelete : int = windowText.find("\n") + 1
 		super.setWindowText(windowText.erase(0, charsToDelete))
 
 	else:
 		_typingSpace.position.y += _OnEnterCommandYOffset
-		placeholder.position.y += _OnEnterCommandYOffset
+		_placeholder.position.y += _OnEnterCommandYOffset
 
-	super.setWindowText(super.getWindowText() + newText + "\n")
-	placeholder.text = "clear" # remove this line in order to stop setting "clear" as the suggested command
+	super.setWindowText(super.getWindowText() + newText + "\n" + _TERMINAL_PATH)
+	_placeholder.text = "clear" # remove this line in order to stop setting "clear" as the suggested command
 	_erasedChars.clear()
-	_lastTextLength = len(_TERMINAL_PATH)
+	_lastTextLength = 0
+	_typingSpace.clear()
