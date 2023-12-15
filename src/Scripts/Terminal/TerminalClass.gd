@@ -72,16 +72,15 @@ func _checkTypedChar(newText : String):
 		_resetTerminalText()
 		return
 
+	var newTextLength = len(newText)	
 	var pathTotalChars : int = len(_TERMINAL_PATH) - 1
-	var lastChar : String = _typingSpace.text[-1]
-	var charIndex : int = _typingSpace.text.rfind(lastChar)
+	var lastCharIndex : int = newTextLength - 1
 
-	var newTextLength = len(newText)
 	if _lastTextLength > newTextLength:
-		_returnPlaceholderChar(charIndex - pathTotalChars)
+		_returnPlaceholderChar(lastCharIndex - pathTotalChars)
 
-	elif charIndex > pathTotalChars:
-		_erasePlaceholder(charIndex - len(_TERMINAL_PATH))
+	elif lastCharIndex > pathTotalChars:
+		_erasePlaceholder(lastCharIndex - len(_TERMINAL_PATH))
 
 	_lastTextLength = newTextLength
 
