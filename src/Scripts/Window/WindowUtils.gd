@@ -4,8 +4,9 @@ const _PIXELATE_TEXT_SCALE : Vector2 = Vector2(1.5, 1.5)
 const _SIZE_OFFSET : int = 40
 const _WINDOW_TEXT_POS_OFFSET : Vector2 = Vector2(16, 56)
 const _WINDOW_TEXT_LINE_SPACING : int = 10
-const _TYPING_SPACE_POS_OFFSET : Vector2 = Vector2(10, 40)
-const _PLACEHOLDER_POS_OFFSET : Vector2 = Vector2(260, 56)
+const _TYPING_SPACE_POS_OFFSET : Vector2 = Vector2(256, 40)
+const _PLACEHOLDER_POS_OFFSET : Vector2 = Vector2(262, 56)
+
 
 static func configureWindowTextObj(obj : Object, font : FontFile, fontSize : int, reference : Rect2,
 									fontColor : Color, usePlaceholderOffset : bool = false):

@@ -2,7 +2,7 @@ extends Node2D
 class_name WindowDisplay
 
 
-const _WINDOW_LIMIT_OFFSET : float = 100
+const _WINDOW_LIMIT_OFFSET : float = 30
 
 var _moving : bool = false
 var _resizing : bool = false
@@ -32,6 +32,16 @@ func _init(widthScale : float, heightScale : float,
 
 	WindowUtils.configureWindowTextObj(_windowText, font, fontSize, _windowSprite.get_rect(), fontColor)
 	_windowSprite.add_child(_windowText)
+
+
+# UPDATE PER FRAME
+
+func _process(delta):
+	if _resizing:
+		_scale(delta)
+
+	if _moving:
+		_reposition(delta)
 
 
 # PUBLIC METHODS
@@ -105,12 +115,3 @@ func _reposition(delta : float):
 func _isInsideWindow(pos : Vector2):
 	return _windowSprite.get_rect().has_point(pos)
 
-
-# UPDATE PER FRAME
-
-func _process(delta):
-	if _resizing:
-		_scale(delta)
-
-	if _moving:
-		_reposition(delta)
