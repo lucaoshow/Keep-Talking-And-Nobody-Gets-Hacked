@@ -4,6 +4,7 @@ class_name Terminal
 
 const TERMINAL_PATH : String = "C:\\WINDOWS\\System32>"
 const _TYPING_SPACE_LIMIT_OFFSET : float = 330
+const _TYPING_SPACE_MAX_CHARS : int = 61
 
 var _commandExecuter : Commands = Commands.new()
 var _placeholder : Label = Label.new()
@@ -27,8 +28,9 @@ func _init():
 
 	var reference : Rect2 = super.getSpriteRect()
 	WindowUtils.configureWindowTextObj(_typingSpace, font, fontSize, reference, terminalFontColor)
+	_typingSpace.max_length = _TYPING_SPACE_MAX_CHARS
 	_originalTypingSpacePos = _typingSpace.position
-	
+
 	_typingSpace.connect("text_changed", _checkTypedChar)
 	_typingSpace.connect("text_submitted", _enterCommand)
 
@@ -41,6 +43,16 @@ func _init():
 	super.addChild(_placeholder)
 
 	_OnEnterCommandYOffset = super.getEnterYOffset()
+
+
+# UPDATE PER FRAME
+func _process(delta):
+	super._process(delta)
+	if super.isWriting():
+		_typingSpace.editable = false
+		setPlaceholderText("")
+	else:
+		_typingSpace.editable = true
 
 
 # PUBLIC METHODS

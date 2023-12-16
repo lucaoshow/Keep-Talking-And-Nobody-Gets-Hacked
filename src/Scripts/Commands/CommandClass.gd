@@ -37,10 +37,12 @@ func _getformattedHelpText():
 func _help(terminal : Terminal):
 	terminal.setPlaceholderText("clear")
 	terminal.writeAnimatedText(_getformattedHelpText() + "\n" + terminal.TERMINAL_PATH)
-	terminal.adjustYPos(terminal.getEnterYOffset() * len(commandDict))
+	for i in range(len(commandDict)):
+		terminal.adjustYPos(terminal.getEnterYOffset())
 
 
 func _clear(terminal : Terminal):
+	terminal.windowTextToOriginalSize()
 	terminal.setWindowText(terminal.TERMINAL_PATH)
 	terminal.setPlaceholderText("help")
 	terminal.returnToOriginalPos()

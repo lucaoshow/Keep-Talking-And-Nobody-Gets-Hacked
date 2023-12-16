@@ -5,9 +5,10 @@ class_name WindowDisplay
 const _ENTER_Y_OFFSET : float = 43.5
 const _WINDOW_TEXT_LIMIT_OFFSET : float = 200
 
+var _writing : bool = false
+
 var _moving : bool = false
 var _resizing : bool = false
-var _writing : bool = false
 
 var _windowSprite : Sprite2D = Sprite2D.new()
 var _windowText : Label = Label.new()
@@ -19,17 +20,17 @@ var _tMove : float
 var _targetPosition : Vector2
 var _elapsedTimeResize : float
 var _elapsedTimeMove : float
-
+var _originalWindowTextSize : Vector2
 
 # CONSTRUCTOR
 
 func _init(windowTexture : CompressedTexture2D, font : FontFile, fontSize : int, fontColor : Color):
-
 	_windowSprite.texture = windowTexture
 	add_child(_windowSprite)
 
 	WindowUtils.configureWindowTextObj(_windowText, font, fontSize, _windowSprite.get_rect(), fontColor)
 	_windowSprite.add_child(_windowText)
+	_originalWindowTextSize = _windowText.size
 
 
 # UPDATE PER FRAME
@@ -67,10 +68,15 @@ func writeAnimatedText(text : String):
 	_windowText.visible_characters = len(_windowText.text)
 	_windowText.text += text
 	_writing = true
+	print(_windowText.visible_characters)
 
 
 func addChild(child : Object):
 	_windowSprite.add_child(child)
+
+
+func windowTextToOriginalSize():
+	_windowText.size = _originalWindowTextSize
 
 
 func getSpriteRect():
@@ -91,6 +97,12 @@ func getWindowText():
 
 func setWindowText(text : String):
 	_windowText.text = text
+	_windowText.visible_characters = -1
+
+
+
+func isWriting():
+	return _writing
 
 
 # PRIVATE METHODS
@@ -113,7 +125,7 @@ func _reposition(delta : float):
 
 func _eraseBeggining():
 	var charsToDelete : int = _windowText.text.find("\n") + 1
-	setWindowText(_windowText.text.erase(0, charsToDelete))
+	_windowText.text = _windowText.text.erase(0, charsToDelete)
 
 
 func _isInsideWindow(pos : Vector2):
@@ -135,8 +147,10 @@ func _checkActionFinished(t : float):
 
 
 func _checkWritingEnd():
-	if _windowText.visible_characters == len(_windowText.text):
+	if _windowText.visible_characters >= len(_windowText.text):
 		_windowText.visible_characters = -1
 		_writing = false
 		return
+	print(_windowText.visible_characters)
+
 	_windowText.visible_characters += 3
