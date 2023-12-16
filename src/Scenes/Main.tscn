@@ -20,12 +20,6 @@ wait_time = 3.0
 one_shot = true
 autostart = true
 
-[node name="Resize" type="Timer" parent="."]
-wait_time = 3.0
-
-[node name="Move" type="Timer" parent="."]
-wait_time = 1.7
-
 [node name="Background" type="Sprite2D" parent="."]
 position = Vector2(640, 360)
 scale = Vector2(1.00235, 1)
@@ -58,6 +52,4 @@ script = ExtResource("4_ei0ga")
 [node name="Counter" type="Timer" parent="Taskbar/Hours"]
 
 [connection signal="timeout" from="Start" to="." method="_on_start_timeout"]
-[connection signal="timeout" from="Resize" to="." method="_on_resize_timeout"]
-[connection signal="timeout" from="Move" to="." method="_on_move_timeout"]
 [connection signal="timeout" from="Taskbar/Hours/Counter" to="Taskbar/Hours" method="_on_counter_timeout"]

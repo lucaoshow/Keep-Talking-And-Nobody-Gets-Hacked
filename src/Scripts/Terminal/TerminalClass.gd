@@ -2,59 +2,103 @@ extends WindowDisplay
 class_name Terminal
 
 
-const _TERMINAL_PATH : String = "C:\\WINDOWS\\System32>"
+const TERMINAL_PATH : String = "C:\\WINDOWS\\System32>"
+const _TYPING_SPACE_LIMIT_OFFSET : float = 330
+const _TYPING_SPACE_MAX_CHARS : int = 61
 
-var placeholder : Label = Label.new()
+var _commandExecuter : Commands = Commands.new()
+var _placeholder : Label = Label.new()
 var _typingSpace : LineEdit = LineEdit.new()
 
 var _erasedChars : Array[String]
 var _OnEnterCommandYOffset : float
 var _lastTextLength : int
+var _originalTypingSpacePos : Vector2
+var _originalPlaceholderPos : Vector2
 
-func _init(widthScale : float, heightScale : float):
+func _init():
 	const texture : CompressedTexture2D = preload("res://Assets/Terminal/terminal.png")
-	const font : FontFile = preload("res://Assets/Terminal/CMD.ttf")
+	const font : FontFile = preload("res://Assets/Terminal/Determination.ttf")
 	const fontSize : int = 18
+	const terminalFontColor : Color = Color8(242, 240, 228, 255)	
 	const placeholderFontColor : Color = Color8(242, 240, 228, 100)
-	const terminalFontColor : Color = Color8(242, 240, 228, 255)
 
-	super._init(widthScale, heightScale, texture, font, fontSize, terminalFontColor)
+	super._init(texture, font, fontSize, terminalFontColor)
+	super.setWindowText(TERMINAL_PATH)
 
 	var reference : Rect2 = super.getSpriteRect()
 	WindowUtils.configureWindowTextObj(_typingSpace, font, fontSize, reference, terminalFontColor)
-	_typingSpace.text = _TERMINAL_PATH
+	_typingSpace.max_length = _TYPING_SPACE_MAX_CHARS
+	_originalTypingSpacePos = _typingSpace.position
 
 	_typingSpace.connect("text_changed", _checkTypedChar)
 	_typingSpace.connect("text_submitted", _enterCommand)
 
 	super.addChild(_typingSpace)
 
-	WindowUtils.configureWindowTextObj(placeholder, font, fontSize, reference, placeholderFontColor, true)
-	placeholder.text = "clear"
+	WindowUtils.configureWindowTextObj(_placeholder, font, fontSize, reference, placeholderFontColor, true)
+	_placeholder.text = "help"
+	_originalPlaceholderPos = _placeholder.position
 
-	super.addChild(placeholder)
+	super.addChild(_placeholder)
 
 	_OnEnterCommandYOffset = super.getEnterYOffset()
-	_lastTextLength = len(_TERMINAL_PATH)
+
+
+# UPDATE PER FRAME
+func _process(delta):
+	super._process(delta)
+	if super.isWriting():
+		_typingSpace.editable = false
+		setPlaceholderText("")
+	else:
+		_typingSpace.editable = true
+
+
+# PUBLIC METHODS
+
+func setPlaceholderText(text : String):
+	_placeholder.text = text
+
+
+func adjustYPos(offset : float):
+	if _textIsNotInTheEdge():
+		_typingSpace.position.y += offset
+		_placeholder.position.y += offset
+
+
+func returnToOriginalPos():
+	_typingSpace.position = _originalTypingSpacePos
+	_placeholder.position = _originalPlaceholderPos
 
 
 # PRIVATE METHODS
 
-func _resetTerminalText():
-	_typingSpace.text = _TERMINAL_PATH + _typingSpace.text.substr(len(_TERMINAL_PATH) - 1)
-	_typingSpace.caret_column = len(_typingSpace.text)
-
-
 func _erasePlaceholder(index : int):
-	if index < len(placeholder.text):
-		_erasedChars.append(placeholder.text[index])
-		placeholder.text[index] = "_"
+	if index < len(_placeholder.text):
+		_erasedChars.append(_placeholder.text[index])
+		_placeholder.text[index] = "_"
 
 
 func _returnPlaceholderChar(index : int):
-	if index < len(placeholder.text):
-		placeholder.text[index] = _erasedChars[-1]
+	if index < len(_placeholder.text):
+		_placeholder.text[index] = _erasedChars[-1]
 		_erasedChars.pop_back()
+
+
+func _resetPlaceHolderText():
+	for i in range(len(_erasedChars)):
+		_placeholder.text[i] = _erasedChars[i]
+	_erasedChars.clear()
+
+
+func _resetTypingSpaceText():
+	_lastTextLength = 0
+	_typingSpace.clear()
+
+
+func _textIsNotInTheEdge():
+	return _typingSpace.position.y + _TYPING_SPACE_LIMIT_OFFSET < super.getSpriteHeight()
 
 
 # EVENT LISTENER
@@ -68,36 +112,23 @@ func _input(event):
 # CALLABLES FOR SIGNALS
 
 func _checkTypedChar(newText : String):
-	if !_typingSpace.text.begins_with(_TERMINAL_PATH):
-		_resetTerminalText()
-		return
-
-	var pathTotalChars : int = len(_TERMINAL_PATH) - 1
-	var lastChar : String = _typingSpace.text[-1]
-	var charIndex : int = _typingSpace.text.rfind(lastChar)
-
 	var newTextLength = len(newText)
-	if _lastTextLength > newTextLength:
-		_returnPlaceholderChar(charIndex - pathTotalChars)
 
-	elif charIndex > pathTotalChars:
-		_erasePlaceholder(charIndex - len(_TERMINAL_PATH))
+	if _lastTextLength > newTextLength:
+		_returnPlaceholderChar(newTextLength)
+
+	elif _lastTextLength < newTextLength:
+		_erasePlaceholder(newTextLength - 1)
 
 	_lastTextLength = newTextLength
 
 
 func _enterCommand(newText : String):
-	_typingSpace.clear()
-	var windowText = super.getWindowText()
-	if super.textIsBiggerThanWindow():
-		var charsToDelete : int = windowText.find("\n") + 1
-		super.setWindowText(windowText.erase(0, charsToDelete))
-
-	else:
+	if _textIsNotInTheEdge():
 		_typingSpace.position.y += _OnEnterCommandYOffset
-		placeholder.position.y += _OnEnterCommandYOffset
+		_placeholder.position.y += _OnEnterCommandYOffset
 
-	super.setWindowText(super.getWindowText() + newText + "\n")
-	placeholder.text = "clear" # remove this line in order to stop setting "clear" as the suggested command
-	_erasedChars.clear()
-	_lastTextLength = len(_TERMINAL_PATH)
+	_resetPlaceHolderText()
+	_resetTypingSpaceText()
+
+	_commandExecuter.executeCommand(newText, self)
