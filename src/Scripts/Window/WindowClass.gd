@@ -12,6 +12,7 @@ var _resizing : bool = false
 
 var _windowSprite : Sprite2D = Sprite2D.new()
 var _windowText : Label = Label.new()
+var _taskbarText : String
 
 var _targetScaleX : float
 var _targetScaleY : float
@@ -25,132 +26,144 @@ var _originalWindowTextSize : Vector2
 # CONSTRUCTOR
 
 func _init(windowTexture : CompressedTexture2D, font : FontFile, fontSize : int, fontColor : Color):
-	_windowSprite.texture = windowTexture
-	add_child(_windowSprite)
+	self._windowSprite.texture = windowTexture
+	add_child(self._windowSprite)
 
-	WindowUtils.configureWindowTextObj(_windowText, font, fontSize, _windowSprite.get_rect(), fontColor)
-	_windowSprite.add_child(_windowText)
-	_originalWindowTextSize = _windowText.size
+	WindowUtils.configureWindowTextObj(self._windowText, font, fontSize, self._windowSprite.get_rect(), fontColor)
+	self._windowSprite.add_child(self._windowText)
+	self._originalWindowTextSize = self._windowText.size
 
 
 # UPDATE PER FRAME
 
 func _process(delta):
-	if _writing:
-		_checkWritingEnd()
-	
-	if _resizing:
-		_scale(delta)
+	if self._writing:
+		self._checkWritingEnd()
 
-	if _moving:
-		_reposition(delta)
+	if self._resizing:
+		self._scale(delta)
 
-	if _textIsBiggerThanWindow():
-		_eraseBeggining()
+	if self._moving:
+		self._reposition(delta)
+
+	if self._textIsBiggerThanWindow():
+		self._eraseBeggining()
 
 
 # PUBLIC METHODS
 
 func resize(widthPercentage : float, heightPercentage : float, t : float):
-	_targetScaleX = _windowSprite.scale.x * widthPercentage
-	_targetScaleY = _windowSprite.scale.y * heightPercentage
-	_tResize = t
-	_resizing = true
+	self._targetScaleX = self._windowSprite.scale.x * widthPercentage
+	self._targetScaleY = self._windowSprite.scale.y * heightPercentage
+	self._tResize = t
+	self._resizing = true
 
 
 func moveTo(pos : Vector2, t : float):
-	_targetPosition = pos
-	_tMove = t
-	_moving = true
+	self._targetPosition = pos
+	self._tMove = t
+	self._moving = true
 
 
 func writeAnimatedText(text : String):
-	_windowText.visible_characters = len(_windowText.text)
-	_windowText.text += text
-	_writing = true
-	print(_windowText.visible_characters)
+	self._windowText.visible_characters = len(self._windowText.text)
+	self._windowText.text += text
+	self._writing = true
+	print(self._windowText.visible_characters)
 
 
 func addChild(child : Object):
-	_windowSprite.add_child(child)
+	self._windowSprite.add_child(child)
 
 
 func windowTextToOriginalSize():
-	_windowText.size = _originalWindowTextSize
+	self._windowText.size = self._originalWindowTextSize
+
+
+func getSpriteTexture():
+	return self._windowSprite.texture
+
+
+func getTaskbarText():
+	return self._taskbarText
 
 
 func getSpriteRect():
-	return _windowSprite.get_rect()
+	return self._windowSprite.get_rect()
 
 
 func getSpriteHeight():
-	return _windowSprite.texture.get_height()
+	return self._windowSprite.texture.get_height()
 
 
 func getEnterYOffset():
-	return _ENTER_Y_OFFSET
+	return self._ENTER_Y_OFFSET
 
 
 func getWindowText():
-	return _windowText.text
+	return self._windowText.text
+
+
+func setTaskbarText(text : String):
+	self._taskbarText = text
 
 
 func setWindowText(text : String):
-	_windowText.text = text
-	_windowText.visible_characters = -1
+	self._windowText.text = text
+	self._windowText.visible_characters = -1
 
 
 
 func isWriting():
-	return _writing
+	return self._writing
 
 
 # PRIVATE METHODS
 
 
 func _scale(delta : float):
-	var tPerFrame = _tResize * delta
-	_elapsedTimeResize += tPerFrame
-	_windowSprite.scale.x = lerpf(_windowSprite.scale.x, _targetScaleX, tPerFrame)
-	_windowSprite.scale.y = lerpf(_windowSprite.scale.y, _targetScaleY, tPerFrame)
-	_checkActionFinished(_tResize)
+	var tPerFrame : float = self._tResize * delta
+	self._elapsedTimeResize += tPerFrame
+	self._windowSprite.scale.x = lerpf(self._windowSprite.scale.x, self._targetScaleX, tPerFrame)
+	self._windowSprite.scale.y = lerpf(self._windowSprite.scale.y, self._targetScaleY, tPerFrame)
+	self._checkActionFinished(self._tResize)
 
 
 func _reposition(delta : float):
-	var tPerFrame = _tMove * delta
-	_elapsedTimeMove += tPerFrame
-	position = position.lerp(_targetPosition, tPerFrame)
-	_checkActionFinished(_tMove)
+	var tPerFrame : float = self._tMove * delta
+	self._elapsedTimeMove += tPerFrame
+	position = position.lerp(self._targetPosition, tPerFrame)
+	self._checkActionFinished(self._tMove)
 
 
 func _eraseBeggining():
-	var charsToDelete : int = _windowText.text.find("\n") + 1
-	_windowText.text = _windowText.text.erase(0, charsToDelete)
+	var charsToDelete : int = self._windowText.text.find("\n") + 1
+	self._windowText.text = self._windowText.text.erase(0, charsToDelete)
 
 
 func _isInsideWindow(pos : Vector2):
-	return _windowSprite.get_rect().has_point(pos)
+	return self._windowSprite.get_rect().has_point(pos)
 
 
 func _textIsBiggerThanWindow():
-	return _windowText.size.y + _WINDOW_TEXT_LIMIT_OFFSET >= getSpriteHeight()
+	return self._windowText.size.y + self._WINDOW_TEXT_LIMIT_OFFSET >= self.getSpriteHeight()
 
 
 func _checkActionFinished(t : float):
-	if _elapsedTimeResize >= t and t == _tResize:
-		_resizing = false
-		_elapsedTimeResize = 0
+	if self._elapsedTimeResize >= t and t == self._tResize:
+		self._resizing = false
+		self._elapsedTimeResize = 0
 
-	if _elapsedTimeMove >= t and t == _tMove:
-		_moving = false
-		_elapsedTimeMove = 0
+	if self._elapsedTimeMove >= t and t == self._tMove:
+		self._moving = false
+		self._elapsedTimeMove = 0
 
 
 func _checkWritingEnd():
-	if _windowText.visible_characters >= len(_windowText.text):
-		_windowText.visible_characters = -1
-		_writing = false
+	if self._windowText.visible_characters >= len(self._windowText.text):
+		self._windowText.visible_characters = -1
+		self._writing = false
 		return
-	print(_windowText.visible_characters)
+	print(self._windowText.visible_characters)
 
-	_windowText.visible_characters += 3
+	self._windowText.visible_characters += 3
