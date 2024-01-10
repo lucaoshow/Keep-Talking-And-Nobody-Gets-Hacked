@@ -6,6 +6,8 @@ class_name Taskbar
 const WINDOW_INITIAL_POS : Vector2 = Vector2(125, 0)
 const WINDOW_POS_OFFSET : Vector2 = Vector2(155, 0)
 const MAX_WINDOWS : int = 5
+const PLUS_POS : Vector2 = Vector2(1040, 18)
+const PLUS_SCALE : Vector2 = Vector2(1.3, 1.3)
 
 var windows : Array[TaskbarWindow]
 var plusTexture : CompressedTexture2D = preload("res://Assets/Taskbar/plus.png")
@@ -16,7 +18,8 @@ var plusTexture : CompressedTexture2D = preload("res://Assets/Taskbar/plus.png")
 func _ready():
 	plusSprite.visible = false
 	plusSprite.texture = plusTexture
-	plusSprite.position = Vector2(900, 10)
+	plusSprite.position = PLUS_POS
+	plusSprite.scale = PLUS_SCALE
 	self.add_child(plusSprite)
 
 
@@ -41,12 +44,13 @@ func _displayWindows():
 
 	for w in range(1, amount):
 		if w > MAX_WINDOWS:
-			plusSprite.show()
+			break
 		var window = windows[w]
 		window.position = windows[w-1].position + WINDOW_POS_OFFSET
 		if !window.is_inside_tree():
 			self.add_child(window)
 
+	plusSprite.visible = amount > MAX_WINDOWS
 
 func _removeFromScene(window : WindowDisplay):
 	for i in range(windows.size() - 1, -1, -1):

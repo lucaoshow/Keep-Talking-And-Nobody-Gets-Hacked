@@ -35,7 +35,7 @@ static func configureWindowTextObj(obj : Object, font : FontFile, fontSize : int
 
 static func configureTaskbarWindowObj(obj : TaskbarWindow, img : CompressedTexture2D, text : String):
 	var styleBox = StyleBoxTexture.new()
-	styleBox.texture = preload("res://Assets/TaskbarWindow/background.png")
+	styleBox.texture = preload("res://Assets/Taskbar/TaskbarWindow/background.png")
 
 	var border : Panel = Panel.new()
 	border.set("theme_override_styles/panel", styleBox)
@@ -49,7 +49,7 @@ static func configureTaskbarWindowObj(obj : TaskbarWindow, img : CompressedTextu
 
 	var label : Label = Label.new()
 	label.scale = _PIXELATE_LABEL_FILTER_SCALE
-	var font : FontFile = preload("res://Assets/TaskbarWindow/SEGUISB.TTF")
+	var font : FontFile = preload("res://Assets/Taskbar/TaskbarWindow/SEGUISB.TTF")
 	var fontSize : int = 12
 	label.text = text
 	label.position = _TEXT_POSITION
