@@ -167,3 +167,8 @@ func _checkWritingEnd():
 	print(self._windowText.visible_characters)
 
 	self._windowText.visible_characters += 3
+
+
+# Used to verify if the node inherits from class WindowDisplay
+func _get(property):
+	return true

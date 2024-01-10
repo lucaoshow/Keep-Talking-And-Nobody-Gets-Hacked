@@ -1,17 +1,24 @@
 extends Node2D
 
-@onready var firstWindow : Terminal = Terminal.new()
 @onready var taskbar : Taskbar = $Taskbar
 
 
+func isWindowDisplay(node : Node):
+	return node.get("")
+
+
 func _on_start_timeout():
-	firstWindow.position = Vector2(520,307) # idk random position to test
-	add_child(firstWindow)
+	for i in range(7):
+		var window : Terminal = Terminal.new()
+		window.position = Vector2(520,307) + Vector2(i * 20, 0)
+		add_child(window)
 
 
 func _on_child_entered_tree(node):
-	taskbar.AddNewWindow(node)
+	if isWindowDisplay(node):
+		taskbar.addNewWindow(node)
 
 
 func _on_child_exiting_tree(node):
-	taskbar.RemoveWindow(node)
+	if isWindowDisplay(node):
+		taskbar.removeWindow(node)

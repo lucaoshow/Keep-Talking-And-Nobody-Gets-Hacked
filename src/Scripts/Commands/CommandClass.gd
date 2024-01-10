@@ -19,7 +19,7 @@ func executeCommand(command : String, terminal : Terminal):
 # PRIVATE METHODS
 
 func _getformattedHelpText():
-	var text : String
+	var text : String = ""
 	var spaces : String = "                 "
 	var index = 0
 	for key in self.commandDict:
