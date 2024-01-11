@@ -27,11 +27,15 @@ var _originalWindowTextSize : Vector2
 
 func _init(windowTexture : CompressedTexture2D, font : FontFile, fontSize : int, fontColor : Color):
 	self._windowSprite.texture = windowTexture
-	add_child(self._windowSprite)
+	self.add_child(self._windowSprite)
 
 	WindowUtils.configureWindowTextObj(self._windowText, font, fontSize, self._windowSprite.get_rect(), fontColor)
 	self._windowSprite.add_child(self._windowText)
 	self._originalWindowTextSize = self._windowText.size
+
+	var closeButton : Button = WindowUtils.generateWindowCloseButton(_windowSprite.get_rect().size)
+	closeButton.connect("button_up", self.closeWindow)
+	self.add_child(closeButton)
 
 
 # UPDATE PER FRAME
@@ -118,6 +122,10 @@ func isWriting():
 	return self._writing
 
 
+func closeWindow():
+	self.queue_free()
+
+
 # PRIVATE METHODS
 
 
@@ -167,8 +175,3 @@ func _checkWritingEnd():
 	print(self._windowText.visible_characters)
 
 	self._windowText.visible_characters += 3
-
-
-# Used to verify if the node inherits from class WindowDisplay
-func _get(property):
-	return true
