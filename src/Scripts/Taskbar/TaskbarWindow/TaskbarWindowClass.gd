@@ -17,10 +17,13 @@ func _init(window : WindowDisplay):
 
 func _configureDisplay():
 	WindowUtils.configureTaskbarWindowObj(self, self.img, self.text)
+	var closeButton : TextureButton = WindowUtils.generateTaskbarWindowCloseButton()
+	closeButton.connect("button_up", Taskbar.onCloseWindow.bind(self))
+	self.add_child(closeButton)
 
 
 # Method that is called when a window is exiting the scene. If the ids don't match, it is not the window exiting the scene.
-func isActiveWindow(window : Node):
+func isActiveWindow(window : WindowDisplay):
 	return window.get_instance_id() != self.id
 
 func getTexture():
