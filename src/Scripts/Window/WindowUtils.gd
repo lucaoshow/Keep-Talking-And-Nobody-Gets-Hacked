@@ -7,6 +7,21 @@ const _WINDOW_TEXT_LINE_SPACING : int = 10
 const _TYPING_SPACE_POS_OFFSET : Vector2 = Vector2(238, 40)
 const _PLACEHOLDER_POS_OFFSET : Vector2 = Vector2(245, 55)
 
+const _IMAGE_POSITION : Vector2 = Vector2(0, 18)
+const _IMAGE_TARGET_X_SIZE : int = 27
+const _IMAGE_TARGET_Y_SIZE : int = 18
+const _TEXT_POSITION : Vector2 = Vector2(25, 7)
+const _PIXELATE_LABEL_FILTER_SCALE : Vector2 = Vector2(1.32, 1.32)
+const _BORDER_SIZE : Vector2 = Vector2(145, 32)
+const _BORDER_POSITION : Vector2 = Vector2(-25, 2)
+
+const _BUTTON_X_RESIZING_FACTOR = 40
+const _BUTTON_Y_RESIZING_FACTOR = 16
+const _BUTTON_X_OFFSET : int = -33
+const _BUTTON_Y_OFFSET : int = 9
+
+const TASKBAR_WINDOW_BUTTON_X_OFFSET : int = 20
+const TASKBAR_WINDOW_BUTTON_Y_POS : int = 2
 
 static func configureWindowTextObj(obj : Object, font : FontFile, fontSize : int, reference : Rect2,
 									fontColor : Color, usePlaceholderOffset : bool = false):
@@ -27,3 +42,49 @@ static func configureWindowTextObj(obj : Object, font : FontFile, fontSize : int
 
 	elif usePlaceholderOffset:
 		obj.position = reference.position + _PLACEHOLDER_POS_OFFSET
+
+static func configureTaskbarWindowObj(obj : TaskbarWindow, img : CompressedTexture2D, text : String):
+	var styleBox = StyleBoxTexture.new()
+	styleBox.texture = preload("res://Assets/Taskbar/TaskbarWindow/background.png")
+
+	var border : Panel = Panel.new()
+	border.set("theme_override_styles/panel", styleBox)
+	border.size = _BORDER_SIZE
+	border.position = _BORDER_POSITION
+
+	var image : Sprite2D = Sprite2D.new()
+	image.texture = img
+	image.position = _IMAGE_POSITION
+	
+	var scalingRef : Vector2 = image.get_rect().size 
+	image.scale = Vector2(_IMAGE_TARGET_X_SIZE / scalingRef.x, _IMAGE_TARGET_Y_SIZE / scalingRef.y)
+
+	var label : Label = Label.new()
+	label.scale = _PIXELATE_LABEL_FILTER_SCALE
+	var font : FontFile = preload("res://Assets/Taskbar/TaskbarWindow/SEGUISB.TTF")
+	var fontSize : int = 12
+	label.text = text
+	label.position = _TEXT_POSITION
+	label.set("theme_override_fonts/font", font)
+	label.set("theme_override_font_sizes/font_size", fontSize)
+
+	obj.add_child(border)
+	obj.add_child(image)
+	obj.add_child(label)
+
+
+static func generateWindowCloseButton(rectSize : Vector2):
+	var button : Button = Button.new()
+	button.size = Vector2(rectSize.x / _BUTTON_X_RESIZING_FACTOR, rectSize.y / _BUTTON_Y_RESIZING_FACTOR)
+	button.flat = true
+	button.position = Vector2(rectSize.x / 2 + _BUTTON_X_OFFSET, rectSize.y / -2 + _BUTTON_Y_OFFSET)
+	return button
+
+
+static func generateTaskbarWindowCloseButton():
+	var button : TextureButton = TextureButton.new()
+	button.scale = _PIXELATE_LABEL_FILTER_SCALE
+	button.texture_normal = preload("res://Assets/Taskbar/TaskbarWindow/close.png")
+	button.texture_hover = preload("res://Assets/Taskbar/TaskbarWindow/close_hover.png")
+	button.position = Vector2(_BORDER_SIZE.x / 2 + TASKBAR_WINDOW_BUTTON_X_OFFSET, TASKBAR_WINDOW_BUTTON_Y_POS)
+	return button

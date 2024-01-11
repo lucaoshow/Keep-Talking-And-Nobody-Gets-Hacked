@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://d4dj00snqlgka"]
+[gd_scene load_steps=8 format=3 uid="uid://d4dj00snqlgka"]
 
 [ext_resource type="Script" path="res://Scripts/Main.gd" id="1_hlalw"]
 [ext_resource type="Texture2D" uid="uid://ega7v0n13r1p" path="res://Assets/Wallpaper/background.jpg" id="2_6cu8s"]
+[ext_resource type="Script" path="res://Scripts/Taskbar/TaskbarClass.gd" id="3_evom1"]
 [ext_resource type="Texture2D" uid="uid://bg4u6da7ojcir" path="res://Assets/Wallpaper/taskbar.png" id="3_jqkse"]
 [ext_resource type="Script" path="res://Scripts/Hour/HourCounter.gd" id="4_ei0ga"]
 
@@ -31,6 +32,7 @@ anchors_preset = 0
 offset_top = 688.0
 offset_right = 1280.0
 offset_bottom = 720.0
+script = ExtResource("3_evom1")
 
 [node name="TaskbarImage" type="Sprite2D" parent="Taskbar"]
 position = Vector2(640, 16.75)
@@ -51,5 +53,12 @@ script = ExtResource("4_ei0ga")
 
 [node name="Counter" type="Timer" parent="Taskbar/Hours"]
 
+[node name="Button" type="Button" parent="."]
+offset_right = 8.0
+offset_bottom = 8.0
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
+[connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]
 [connection signal="timeout" from="Start" to="." method="_on_start_timeout"]
+[connection signal="child_exiting_tree" from="Taskbar" to="." method="_on_taskbar_child_exiting_tree"]
 [connection signal="timeout" from="Taskbar/Hours/Counter" to="Taskbar/Hours" method="_on_counter_timeout"]

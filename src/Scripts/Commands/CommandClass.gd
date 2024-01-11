@@ -10,7 +10,7 @@ const commandDict : Dictionary = {"help" : "Shows the list containing all comman
 
 func executeCommand(command : String, terminal : Terminal):
 	terminal.setWindowText(terminal.getWindowText() + command + "\n")
-	if (command in commandDict.keys()):
+	if (command in self.commandDict.keys()):
 		call("_" + command, terminal)
 		return
 
@@ -19,13 +19,13 @@ func executeCommand(command : String, terminal : Terminal):
 # PRIVATE METHODS
 
 func _getformattedHelpText():
-	var text : String
+	var text : String = ""
 	var spaces : String = "                 "
 	var index = 0
-	for key in commandDict:
+	for key in self.commandDict:
 		var slicingIndex : int = len(spaces) - len(key)
-		text += key + spaces.substr(0, slicingIndex) + commandDict[key]
-		if index != len(commandDict) - 1:
+		text += key + spaces.substr(0, slicingIndex) + self.commandDict[key]
+		if index != len(self.commandDict) - 1:
 			text += "\n"
 		index += 1
 
@@ -36,8 +36,8 @@ func _getformattedHelpText():
 
 func _help(terminal : Terminal):
 	terminal.setPlaceholderText("clear")
-	terminal.writeAnimatedText(_getformattedHelpText() + "\n" + terminal.TERMINAL_PATH)
-	for i in range(len(commandDict)):
+	terminal.writeAnimatedText(self._getformattedHelpText() + "\n" + terminal.TERMINAL_PATH)
+	for i in range(len(self.commandDict)):
 		terminal.adjustYPos(terminal.getEnterYOffset())
 
 

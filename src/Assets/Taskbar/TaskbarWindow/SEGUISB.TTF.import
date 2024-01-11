@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bsd8dvngbiugd"
-path="res://.godot/imported/CMD.ttf-9e0f37de752dc84be9419f89dc99fbe5.fontdata"
+uid="uid://dh3vmobr3nsst"
+path="res://.godot/imported/SEGUISB.TTF-5c685f0b7ad5eeb28fb498da317f1713.fontdata"
 
 [deps]
 
-source_file="res://Assets/Terminal/CMD.ttf"
-dest_files=["res://.godot/imported/CMD.ttf-9e0f37de752dc84be9419f89dc99fbe5.fontdata"]
+source_file="res://Assets/Taskbar/TaskbarWindow/SEGUISB.TTF"
+dest_files=["res://.godot/imported/SEGUISB.TTF-5c685f0b7ad5eeb28fb498da317f1713.fontdata"]
 
 [params]
 

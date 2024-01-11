@@ -24,89 +24,92 @@ func _init():
 	const placeholderFontColor : Color = Color8(242, 240, 228, 100)
 
 	super._init(texture, font, fontSize, terminalFontColor)
-	super.setWindowText(TERMINAL_PATH)
+	super.setWindowText(self.TERMINAL_PATH)
 
 	var reference : Rect2 = super.getSpriteRect()
-	WindowUtils.configureWindowTextObj(_typingSpace, font, fontSize, reference, terminalFontColor)
-	_typingSpace.max_length = _TYPING_SPACE_MAX_CHARS
-	_originalTypingSpacePos = _typingSpace.position
+	WindowUtils.configureWindowTextObj(self._typingSpace, font, fontSize, reference, terminalFontColor)
+	self._typingSpace.max_length = self._TYPING_SPACE_MAX_CHARS
+	self._originalTypingSpacePos = self._typingSpace.position
+	
+	
+	self._typingSpace.connect("text_changed", self._checkTypedChar)
+	self._typingSpace.connect("text_submitted", self._enterCommand)
 
-	_typingSpace.connect("text_changed", _checkTypedChar)
-	_typingSpace.connect("text_submitted", _enterCommand)
+	super.addChild(self._typingSpace)
 
-	super.addChild(_typingSpace)
+	WindowUtils.configureWindowTextObj(self._placeholder, font, fontSize, reference, placeholderFontColor, true)
+	self._placeholder.text = "help"
+	self._originalPlaceholderPos = self._placeholder.position
 
-	WindowUtils.configureWindowTextObj(_placeholder, font, fontSize, reference, placeholderFontColor, true)
-	_placeholder.text = "help"
-	_originalPlaceholderPos = _placeholder.position
+	super.addChild(self._placeholder)
 
-	super.addChild(_placeholder)
+	super.setTaskbarText("Terminal")
 
-	_OnEnterCommandYOffset = super.getEnterYOffset()
+	self._OnEnterCommandYOffset = super.getEnterYOffset()
 
 
 # UPDATE PER FRAME
 func _process(delta):
 	super._process(delta)
 	if super.isWriting():
-		_typingSpace.editable = false
-		setPlaceholderText("")
+		self._typingSpace.editable = false
+		self.setPlaceholderText("")
 	else:
-		_typingSpace.editable = true
+		self._typingSpace.editable = true
 
 
 # PUBLIC METHODS
 
 func setPlaceholderText(text : String):
-	_placeholder.text = text
+	self._placeholder.text = text
 
 
 func adjustYPos(offset : float):
-	if _textIsNotInTheEdge():
-		_typingSpace.position.y += offset
-		_placeholder.position.y += offset
+	if self._textIsNotInTheEdge():
+		self._typingSpace.position.y += offset
+		self._placeholder.position.y += offset
 
 
 func returnToOriginalPos():
-	_typingSpace.position = _originalTypingSpacePos
-	_placeholder.position = _originalPlaceholderPos
+	self._typingSpace.position = self._originalTypingSpacePos
+	self._placeholder.position = self._originalPlaceholderPos
 
 
 # PRIVATE METHODS
 
 func _erasePlaceholder(index : int):
-	if index < len(_placeholder.text):
-		_erasedChars.append(_placeholder.text[index])
-		_placeholder.text[index] = "_"
+	if index < len(self._placeholder.text):
+		self._erasedChars.append(self._placeholder.text[index])
+		self._placeholder.text[index] = "_"
 
 
 func _returnPlaceholderChar(index : int):
-	if index < len(_placeholder.text):
-		_placeholder.text[index] = _erasedChars[-1]
-		_erasedChars.pop_back()
+	if index < len(self._placeholder.text):
+		self._placeholder.text[index] = self._erasedChars[-1]
+		self._erasedChars.pop_back()
 
 
 func _resetPlaceHolderText():
-	for i in range(len(_erasedChars)):
-		_placeholder.text[i] = _erasedChars[i]
-	_erasedChars.clear()
+	for i in range(len(self._erasedChars)):
+		self._placeholder.text[i] = self._erasedChars[i]
+	self._erasedChars.clear()
 
 
 func _resetTypingSpaceText():
-	_lastTextLength = 0
-	_typingSpace.clear()
+	self._lastTextLength = 0
+	self._typingSpace.clear()
 
 
 func _textIsNotInTheEdge():
-	return _typingSpace.position.y + _TYPING_SPACE_LIMIT_OFFSET < super.getSpriteHeight()
+	return self._typingSpace.position.y + self._TYPING_SPACE_LIMIT_OFFSET < super.getSpriteHeight()
 
 
 # EVENT LISTENER
 
 func _input(event):
-	if event is InputEventMouseButton and _isInsideWindow(to_local(event.position)) and _typingSpace:
-		_typingSpace.grab_focus()
-		_typingSpace.caret_column = len(_typingSpace.text)
+	if event is InputEventMouseButton and super._isInsideWindow(to_local(event.position)) and self._typingSpace:
+		self._typingSpace.grab_focus()
+		self._typingSpace.caret_column = len(self._typingSpace.text)
 
 
 # CALLABLES FOR SIGNALS
@@ -114,21 +117,21 @@ func _input(event):
 func _checkTypedChar(newText : String):
 	var newTextLength = len(newText)
 
-	if _lastTextLength > newTextLength:
-		_returnPlaceholderChar(newTextLength)
+	if self._lastTextLength > newTextLength:
+		self._returnPlaceholderChar(newTextLength)
 
-	elif _lastTextLength < newTextLength:
-		_erasePlaceholder(newTextLength - 1)
+	elif self._lastTextLength < newTextLength:
+		self._erasePlaceholder(newTextLength - 1)
 
-	_lastTextLength = newTextLength
+	self._lastTextLength = newTextLength
 
 
 func _enterCommand(newText : String):
-	if _textIsNotInTheEdge():
-		_typingSpace.position.y += _OnEnterCommandYOffset
-		_placeholder.position.y += _OnEnterCommandYOffset
+	if self._textIsNotInTheEdge():
+		self._typingSpace.position.y += self._OnEnterCommandYOffset
+		self._placeholder.position.y += self._OnEnterCommandYOffset
 
-	_resetPlaceHolderText()
-	_resetTypingSpaceText()
+	self._resetPlaceHolderText()
+	self._resetTypingSpaceText()
 
-	_commandExecuter.executeCommand(newText, self)
+	self._commandExecuter.executeCommand(newText, self)
