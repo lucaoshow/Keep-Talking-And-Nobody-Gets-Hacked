@@ -5,7 +5,7 @@ class_name Taskbar
 
 const _WINDOW_INITIAL_POS : Vector2 = Vector2(125, 0)
 const _WINDOW_POS_OFFSET : Vector2 = Vector2(155, 0)
-const _MAX_WINDOWS : int = 6
+const _MAX_WINDOWS : int = 5
 const _PLUS_POS : Vector2 = Vector2(1040, 18)
 const _PLUS_SCALE : Vector2 = Vector2(1.3, 1.3)
 
@@ -65,10 +65,9 @@ func _displayWindows():
 
 
 func _freeCorrespondentTaskWindow(id : int):
-	var window : TaskbarWindow
 	for i in range(self.windows.size() - 1, -1, -1):
 		if windows[i].id == id:
-			window = windows[i]
+			var window : TaskbarWindow = windows[i]
 			windows.remove_at(i)
 			window.queue_free()
 			break
