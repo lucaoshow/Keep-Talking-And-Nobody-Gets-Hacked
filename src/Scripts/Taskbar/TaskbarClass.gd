@@ -5,7 +5,7 @@ class_name Taskbar
 
 const _WINDOW_INITIAL_POS : Vector2 = Vector2(125, 0)
 const _WINDOW_POS_OFFSET : Vector2 = Vector2(155, 0)
-const _MAX_WINDOWS : int = 5
+const _MAX_WINDOWS : int = 6
 const _PLUS_POS : Vector2 = Vector2(1040, 18)
 const _PLUS_SCALE : Vector2 = Vector2(1.3, 1.3)
 
@@ -43,21 +43,24 @@ func onRemoveWindow(id : int):
 # PRIVATE METHODS
 
 func _displayWindows():
-	var amount = len(self.windows)
+	var amount = self.windows.size()
 	if !amount:
 		return
 
 	var startIndex = amount - 1
+	var limitIndex : int = startIndex - _MAX_WINDOWS
 
 	windows[startIndex].position = self._WINDOW_INITIAL_POS
 	if !self.windows[startIndex].is_inside_tree():
 		self.add_child(self.windows[startIndex])
 
 	for w in range(startIndex - 1, -1, -1):
-		if w == self._MAX_WINDOWS:
-			break
-		var window = windows[w]
-		window.position = windows[w-1].position + self._WINDOW_POS_OFFSET
+		var window = self.windows[w]
+		if w <= limitIndex:
+			window.visible = false
+			continue
+		window.visible = true
+		window.position = self.windows[w+1].position + self._WINDOW_POS_OFFSET
 		if !window.is_inside_tree():
 			self.add_child(window)
 
