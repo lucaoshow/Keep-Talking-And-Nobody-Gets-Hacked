@@ -13,6 +13,7 @@ var _resizing : bool = false
 var _windowSprite : Sprite2D = Sprite2D.new()
 var _windowText : Label = Label.new()
 var _taskbarText : String
+var _windowAnimatedSprite : AnimatedSprite2D
 
 var _targetScaleX : float
 var _targetScaleY : float
@@ -117,13 +118,21 @@ func setWindowText(text : String):
 	self._windowText.visible_characters = -1
 
 
-
 func isWriting():
 	return self._writing
 
 
 func closeWindow():
 	self.queue_free()
+
+
+func configureAnimation(textures : Array[CompressedTexture2D]):
+	_windowAnimatedSprite = WindowUtils.getConfiguredAnimatedSprite()
+
+	for t in textures:
+		_windowAnimatedSprite.sprite_frames.add_frame("default", t)
+
+	self.add_child(self._windowAnimatedSprite)
 
 
 # PRIVATE METHODS
