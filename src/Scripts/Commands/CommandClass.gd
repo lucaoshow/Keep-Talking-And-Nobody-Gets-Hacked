@@ -3,16 +3,22 @@ extends Node
 class_name Commands
 
 
-const commandDict : Dictionary = {"help" : "Shows the list containing all commands.", "clear" : "Clears the terminal's text."}
+const commandDict : Dictionary = {"cd <dir>" : "Navigate to the specified directory.", "clear" : "Clears the terminal's text.", "help" : "Shows the list containing all commands.",}
+
+var currentDir : String = "C"
+var previousDir : String
 
 
 # PUBLIC METHODS
 
 func executeCommand(command : String, terminal : Terminal):
+	command = command.strip_edges()
 	terminal.setWindowText(terminal.getWindowText() + command + "\n")
-	if (command in self.commandDict.keys()):
+	if (command in self.commandDict.keys() and command != "cd <dir>"):
 		call("_" + command, terminal)
 		return
+	if (command.begins_with("cd ")):
+		self._cdCommand(command, terminal)
 
 	terminal.setWindowText(terminal.getWindowText() + terminal.TERMINAL_PATH)
 
@@ -46,3 +52,11 @@ func _clear(terminal : Terminal):
 	terminal.setWindowText(terminal.TERMINAL_PATH)
 	terminal.setPlaceholderText("help")
 	terminal.returnToOriginalPos()
+
+
+func _cdCommand(command : String, terminal : Terminal):
+	if (len(command) < 4):
+		return
+	var dir = command.get_slice(" ", 1)
+	if (dir not in Directories.directories.keys()):
+		return

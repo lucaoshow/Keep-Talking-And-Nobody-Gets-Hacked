@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://d4dj00snqlgka"]
+[gd_scene load_steps=8 format=3 uid="uid://d4dj00snqlgka"]
 
 [ext_resource type="Script" path="res://Scripts/Main.gd" id="1_hlalw"]
 [ext_resource type="Texture2D" uid="uid://ega7v0n13r1p" path="res://Assets/Wallpaper/background.jpg" id="2_6cu8s"]
@@ -12,8 +12,6 @@ font_names = PackedStringArray("Tahoma")
 [sub_resource type="LabelSettings" id="LabelSettings_rofbn"]
 font = SubResource("SystemFont_nh5yx")
 font_size = 10
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2phpn"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_hlalw")
@@ -54,11 +52,6 @@ vertical_alignment = 1
 script = ExtResource("4_ei0ga")
 
 [node name="Counter" type="Timer" parent="Taskbar/Hours"]
-
-[node name="Button" type="Button" parent="."]
-offset_right = 8.0
-offset_bottom = 8.0
-theme_override_styles/focus = SubResource("StyleBoxEmpty_2phpn")
 
 [connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
 [connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]
