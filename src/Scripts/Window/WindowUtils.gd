@@ -4,8 +4,7 @@ const _PIXELATE_TEXT_SCALE : Vector2 = Vector2(1.5, 1.5)
 const _SIZE_OFFSET : int = 40
 const _WINDOW_TEXT_POS_OFFSET : Vector2 = Vector2(16, 56)
 const _WINDOW_TEXT_LINE_SPACING : int = 10
-const _TYPING_SPACE_POS_OFFSET : Vector2 = Vector2(238, 40)
-const _PLACEHOLDER_POS_OFFSET : Vector2 = Vector2(245, 55)
+const _TYPING_SPACE_POS_OFFSET : Vector2 = Vector2(10, 41)
 
 const _IMAGE_POSITION : Vector2 = Vector2(0, 18)
 const _IMAGE_TARGET_X_SIZE : int = 27
@@ -26,7 +25,7 @@ const POPUPS_TITLES : Array[String] = ["GRÁTIS", "Eiii Psiu", "ATENÇÃO", "CLI
 
 
 static func configureWindowTextObj(obj : Object, font : FontFile, fontSize : int, ref : Rect2,
-									fontColor : Color, usePlaceholderOffset : bool = false):
+									fontColor : Color):
 
 	obj.scale = _PIXELATE_TEXT_SCALE
 	obj.size = Vector2(ref.size.x - _SIZE_OFFSET, _SIZE_OFFSET)
@@ -42,8 +41,6 @@ static func configureWindowTextObj(obj : Object, font : FontFile, fontSize : int
 		obj.flat = true
 		obj.set("theme_override_styles/focus", StyleBoxEmpty.new())
 
-	elif usePlaceholderOffset:
-		obj.position = ref.position + _PLACEHOLDER_POS_OFFSET
 
 static func configureTaskbarWindowObj(obj : TaskbarWindow, img : CompressedTexture2D, text : String):
 	var styleBox = StyleBoxTexture.new()
