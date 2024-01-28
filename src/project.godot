@@ -13,7 +13,7 @@ config_version=5
 config/name="Onboarding-Inteli"
 run/main_scene="res://Scenes/Main.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
-config/icon="res://Assets/Terminal/test_sprite.svg"
+config/icon="res://icon.png"
 
 [display]
 

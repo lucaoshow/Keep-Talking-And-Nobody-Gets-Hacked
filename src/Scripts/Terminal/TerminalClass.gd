@@ -97,7 +97,7 @@ func _input(event):
 
 # CALLABLES FOR SIGNALS
 
-func _checkTypedChar(newText : String):
+func _checkTypedChar(_newText : String):
 	if !_typingSpace.text.begins_with(self.TERMINAL_PATH):
 		_resetTerminalText()
 		return
