@@ -21,6 +21,9 @@ func executeCommand(command : String, terminal : Terminal):
 		return
 	if (command.begins_with("cd")):
 		self._cdCommand(command, terminal)
+		return
+	
+	self._displayErrorMessage(terminal, 'Command or file not found. Type "help" to see the list of available commands.')
 
 
 # PRIVATE METHODS
@@ -48,12 +51,21 @@ func _getFormattedLsText():
 	return text
 
 
+func _writeToTerminal(terminal : Terminal, msg : String):
+	terminal.writeAnimatedText(msg)
+	for i in range(msg.count("\n")):
+		terminal.adjustYPos(terminal.getEnterYOffset())
+
+
+func _displayErrorMessage(terminal : Terminal, message : String):
+	self._writeToTerminal(terminal, "Error:  " + message + "\n")
+	# TODO: Penalize player
+
+
 # COMMAND FUNCTIONS
 
 func _help(terminal : Terminal):
-	terminal.writeAnimatedText(self._getFormattedHelpText())
-	for i in range(len(self.commandDict) + 2):
-		terminal.adjustYPos(terminal.getEnterYOffset())
+	self._writeToTerminal(terminal, self._getFormattedHelpText())
 
 
 func _clear(terminal : Terminal):
@@ -62,13 +74,18 @@ func _clear(terminal : Terminal):
 
 
 func _ls(terminal : Terminal):
-	terminal.writeAnimatedText(self._getFormattedLsText())
-	for i in range(len(Directories.directories[self.currentDir]) + 2):
-		terminal.adjustYPos(terminal.getEnterYOffset())
+	if (!Directories.directories[self.currentDir].size()):
+		self._writeToTerminal(terminal, "You don't have permission to access that information.")
+		return
+
+	self._writeToTerminal(terminal, self._getFormattedLsText())
 
 
 func _cdCommand(command : String, terminal : Terminal):
+	var errorMsg : String = 'Directory not found. Type "ls" to see the list of available directories.'
+
 	if (len(command) < 4):
+		self._displayErrorMessage(terminal, errorMsg)
 		return
 
 	var dir : String = command.get_slice(" ", 1)
@@ -80,6 +97,7 @@ func _cdCommand(command : String, terminal : Terminal):
 		return
 
 	if (dir not in Directories.directories.keys()):
+		self._displayErrorMessage(terminal, errorMsg)
 		return
 
 	if (dir in Directories.directories[self.currentDir]):
@@ -88,4 +106,4 @@ func _cdCommand(command : String, terminal : Terminal):
 		terminal.navigateToDir(dir)
 		return
 
-	return # Error: invalid command or command usage. Message: Please specify a valid directory.
+	self._displayErrorMessage(terminal, errorMsg)
