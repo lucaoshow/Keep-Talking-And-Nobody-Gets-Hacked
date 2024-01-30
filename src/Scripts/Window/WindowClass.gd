@@ -3,7 +3,7 @@ class_name WindowDisplay
 
 
 const _ENTER_Y_OFFSET : float = 43.5
-const _WINDOW_TEXT_LIMIT_OFFSET : float = 200
+const _WINDOW_TEXT_LIMIT_OFFSET : float = 250
 
 var _writing : bool = false
 
@@ -74,7 +74,6 @@ func writeAnimatedText(text : String):
 	self._windowText.visible_characters = len(self._windowText.text)
 	self._windowText.text += text
 	self._writing = true
-	print(self._windowText.visible_characters)
 
 
 func addChild(child : Object):
@@ -82,6 +81,7 @@ func addChild(child : Object):
 
 
 func windowTextToOriginalSize():
+	self._resetWindowText();
 	self._windowText.size = self._originalWindowTextSize
 
 
@@ -153,17 +153,21 @@ func _reposition(delta : float):
 	self._checkActionFinished(self._tMove)
 
 
-func _eraseBeggining():
-	var charsToDelete : int = self._windowText.text.find("\n") + 1
-	self._windowText.text = self._windowText.text.erase(0, charsToDelete)
-
-
 func _isInsideWindow(pos : Vector2):
 	return self._windowSprite.get_rect().has_point(pos)
 
 
 func _textIsBiggerThanWindow():
 	return self._windowText.size.y + self._WINDOW_TEXT_LIMIT_OFFSET >= self.getSpriteHeight()
+
+
+func _eraseBeggining():
+	var charsToDelete : int = self._windowText.text.find("\n") + 1
+	self._windowText.text = self._windowText.text.erase(0, charsToDelete)
+
+
+func _resetWindowText():
+	self._windowText.text = ""
 
 
 func _checkActionFinished(t : float):
@@ -181,6 +185,5 @@ func _checkWritingEnd():
 		self._windowText.visible_characters = -1
 		self._writing = false
 		return
-	print(self._windowText.visible_characters)
 
 	self._windowText.visible_characters += 3
