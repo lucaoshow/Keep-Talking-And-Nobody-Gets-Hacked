@@ -60,8 +60,23 @@ func returnToOriginalPos():
 	self._typingSpace.position = self._originalTypingSpacePos
 
 
-func setTerminalPath(path : String):
-	self.TERMINAL_PATH = self._formatPath(path)
+func goBackOneDir():
+	var index : int = self.TERMINAL_PATH.rfind("\\")
+	var charsToDelete : int = (len(self.TERMINAL_PATH)) - index
+	print(self.TERMINAL_PATH.erase(index, charsToDelete))
+	self.TERMINAL_PATH = self.TERMINAL_PATH.erase(index, charsToDelete)
+	if (self.TERMINAL_PATH[-1] == ":"):
+		self.TERMINAL_PATH += "\\"
+	self.TERMINAL_PATH += ">"
+	self._resetTypingSpaceText()
+
+
+func navigateToDir(dir : String):
+	if (self.TERMINAL_PATH[-2] == "\\"):
+		self.TERMINAL_PATH = self.TERMINAL_PATH.erase(len(self.TERMINAL_PATH) - 1)
+	self.TERMINAL_PATH[-1] = "\\"
+	self.TERMINAL_PATH += dir + ">"
+	self._resetTypingSpaceText()
 
 
 # PRIVATE METHODS
@@ -72,7 +87,8 @@ func _resetTerminalText():
 
 
 func _resetTypingSpaceText():
-	self._typingSpace.clear()
+	self._typingSpace.text = self.TERMINAL_PATH
+	self._typingSpace.caret_column = len(self._typingSpace.text)
 
 
 func _textIsNotInTheEdge():
@@ -83,10 +99,6 @@ func _grabFocus():
 	self._typingSpace.grab_focus()
 	self._typingSpace.caret_column = len(self._typingSpace.text)
 
-
-func _formatPath(path : String):
-	if (path.contains(">")):
-		return path.erase(path.rfind(">")) + ">"
 
 # EVENT LISTENER
 
