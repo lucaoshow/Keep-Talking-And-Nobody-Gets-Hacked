@@ -3,9 +3,16 @@ extends Node
 class_name Commands
 
 
-const commandDict : Dictionary = {"cd <dir>" : "Navigates to the specified directory.", 
-	"clear" : "Clears the terminal's text.", "help" : "Shows the list containing all commands.",
-	"ls" : "Lists the directories and files in the current directory."}
+const commandDict : Dictionary = {
+	"clear" : "Clears the terminal's text.",
+	"config" : "Shows hardware specifications and system details.",
+	"exiftool <file>" : "Analyzes the specified file.",
+	"find <file>" : "Returns the absolute path to the specified file.",
+	"frw <user>" : "Removes an user from the current network via firewall.",
+	"ls" : "Lists the directories and files in the current directory.",
+	"nmap <IP adress>" : "Scans the users in the network specified by the IP adress.",
+	"rm <dir || file>" : "Removes the specified directory or file.",
+	"users-ls" : "Lists the users present in the system."}
 
 var currentDir : String = "C"
 var previousDirs : Array[String]
@@ -16,7 +23,7 @@ var previousDirs : Array[String]
 func executeCommand(command : String, terminal : Terminal):
 	command = command.strip_edges()
 	terminal.setWindowText(terminal.getWindowText() + terminal.TERMINAL_PATH + command + "\n")
-	if (command in self.commandDict.keys() and command != "cd <dir>"):
+	if ((command in self.commandDict.keys() and !command.contains("<") and !command.contains("-")) or command == "help"):
 		call("_" + command, terminal)
 		return
 	if (command.begins_with("cd")):
@@ -29,15 +36,13 @@ func executeCommand(command : String, terminal : Terminal):
 # PRIVATE METHODS
 
 func _getFormattedHelpText():
-	var text : String = "Command             Description\n-------------------------------\n"
-	var spaces : String = "                         "
+	var text : String = ""
+	var spaces : String = "                                        "
 	var length : int = len(spaces)
-	var index : int = 0
 	for key in self.commandDict:
 		var command : String= "- " + key + ":"
-		var slicingIndex : int = length - len(command) + index *2
-		text += command + spaces.substr(0, slicingIndex) + self.commandDict[key] + "\n"
-		index += 1
+		var spacesAmount : int = length - len(command)
+		text += command + spaces.substr(0, spacesAmount) + self.commandDict[key] + "\n"
 
 	return text
 

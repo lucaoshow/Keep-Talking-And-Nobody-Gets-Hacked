@@ -22,7 +22,7 @@ func goUp():
 
 
 func updateTime():
-	seconds -= counter.wait_time
+	seconds -= 1
 	if (seconds < 0 and minutes > 0):
 		seconds = 59
 		minutes -= 1
@@ -40,7 +40,7 @@ func lose():
 	pass
 
 
-func _process(delta):
+func _process(_delta):
 	if (goingUp):
 		goUp()
 
