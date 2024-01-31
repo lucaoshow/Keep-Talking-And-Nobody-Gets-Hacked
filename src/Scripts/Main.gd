@@ -3,6 +3,7 @@ extends Node2D
 var windows : Array[WindowDisplay]
 
 @onready var taskbar : Taskbar = $Taskbar
+@onready var loadingWindow = $LoadingWindow
 
 
 func isWindowDisplay(node : Node):
@@ -18,6 +19,7 @@ func freeCorrespondentWindow(id : int):
 			windows.erase(w)
 			w.queue_free()
 
+
 func _on_start_timeout():
 	var window : Terminal = Terminal.new()
 	window.position = Vector2(520,307)
@@ -29,7 +31,8 @@ func _on_start_timeout():
 		popUp.position = Vector2(540, 400) + Vector2(i * 20, i * 10)
 		add_child(popUp)
 		windows.append(popUp)
-		
+
+	loadingWindow.startLoading()
 
 
 func _on_child_entered_tree(node):

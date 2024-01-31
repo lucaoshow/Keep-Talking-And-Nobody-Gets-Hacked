@@ -1,10 +1,15 @@
-[gd_scene load_steps=8 format=3 uid="uid://d4dj00snqlgka"]
+[gd_scene load_steps=14 format=3 uid="uid://d4dj00snqlgka"]
 
 [ext_resource type="Script" path="res://Scripts/Main.gd" id="1_hlalw"]
 [ext_resource type="Texture2D" uid="uid://ega7v0n13r1p" path="res://Assets/Wallpaper/background.jpg" id="2_6cu8s"]
 [ext_resource type="Script" path="res://Scripts/Taskbar/TaskbarClass.gd" id="3_evom1"]
 [ext_resource type="Texture2D" uid="uid://bg4u6da7ojcir" path="res://Assets/Wallpaper/taskbar.png" id="3_jqkse"]
 [ext_resource type="Script" path="res://Scripts/Hour/HourCounter.gd" id="4_ei0ga"]
+[ext_resource type="FontFile" uid="uid://nywtust0op3w" path="res://Assets/Terminal/Determination.ttf" id="4_pg1bd"]
+[ext_resource type="Script" path="res://Scripts/LoadingWindow/LoadingWindow.gd" id="6_oio3a"]
+[ext_resource type="Texture2D" uid="uid://dclmuiusn43cs" path="res://Assets/LoadingWindow/echosec_logo.jpg" id="6_uoeuy"]
+[ext_resource type="Texture2D" uid="uid://24q0p75pqu57" path="res://Assets/LoadingWindow/ProgressBarContainer.png" id="7_nwi8o"]
+[ext_resource type="Texture2D" uid="uid://bvmxwpsht4cyn" path="res://Assets/LoadingWindow/ProgressBarFillment.png" id="8_1m70u"]
 
 [sub_resource type="SystemFont" id="SystemFont_nh5yx"]
 font_names = PackedStringArray("Tahoma")
@@ -12,6 +17,8 @@ font_names = PackedStringArray("Tahoma")
 [sub_resource type="LabelSettings" id="LabelSettings_rofbn"]
 font = SubResource("SystemFont_nh5yx")
 font_size = 10
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_oj5we"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_hlalw")
@@ -53,8 +60,55 @@ script = ExtResource("4_ei0ga")
 
 [node name="Counter" type="Timer" parent="Taskbar/Hours"]
 
+[node name="LoadingWindow" type="Node2D" parent="."]
+position = Vector2(1017, 724)
+script = ExtResource("6_oio3a")
+
+[node name="Background" type="TextureRect" parent="LoadingWindow"]
+modulate = Color(0.792157, 0.780392, 0.745098, 1)
+offset_right = 257.0
+offset_bottom = 108.0
+texture = SubResource("CanvasTexture_oj5we")
+
+[node name="EchoSecLogo" type="Sprite2D" parent="LoadingWindow"]
+position = Vector2(24, 22)
+scale = Vector2(0.1725, 0.175)
+texture = ExtResource("6_uoeuy")
+
+[node name="LoadingBar" type="TextureProgressBar" parent="LoadingWindow"]
+offset_left = 6.0
+offset_top = 44.0
+offset_right = 251.0
+offset_bottom = 66.0
+max_value = 420.0
+nine_patch_stretch = true
+texture_under = ExtResource("7_nwi8o")
+texture_progress = ExtResource("8_1m70u")
+
+[node name="RemainingTime" type="Label" parent="LoadingWindow"]
+offset_left = 6.0
+offset_top = 71.0
+offset_right = 247.0
+offset_bottom = 94.0
+theme_override_colors/font_color = Color(0.431373, 0.419608, 0.380392, 1)
+theme_override_fonts/font = ExtResource("4_pg1bd")
+text = "Remaining Time: "
+
+[node name="Title" type="Label" parent="LoadingWindow"]
+offset_left = 50.0
+offset_top = 8.0
+offset_right = 220.0
+offset_bottom = 33.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("4_pg1bd")
+theme_override_font_sizes/font_size = 24
+text = "EchoSec Uploader"
+
+[node name="Timer" type="Timer" parent="LoadingWindow"]
+
 [connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
 [connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]
 [connection signal="timeout" from="Start" to="." method="_on_start_timeout"]
 [connection signal="child_exiting_tree" from="Taskbar" to="." method="_on_taskbar_child_exiting_tree"]
 [connection signal="timeout" from="Taskbar/Hours/Counter" to="Taskbar/Hours" method="_on_counter_timeout"]
+[connection signal="timeout" from="LoadingWindow/Timer" to="LoadingWindow" method="_on_timer_timeout"]
