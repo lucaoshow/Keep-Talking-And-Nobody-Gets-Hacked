@@ -6,6 +6,7 @@ const _ENTER_Y_OFFSET : float = 43.5
 const _WINDOW_TEXT_LIMIT_OFFSET : float = 250
 
 var _writing : bool = false
+var _paused : bool = false
 
 var _moving : bool = false
 var _resizing : bool = false
@@ -74,6 +75,10 @@ func writeAnimatedText(text : String):
 	self._windowText.visible_characters = len(self._windowText.text)
 	self._windowText.text += text
 	self._writing = true
+
+
+func togglePause():
+	self._paused = !self._paused 
 
 
 func addChild(child : Object):
@@ -182,8 +187,8 @@ func _checkActionFinished(t : float):
 
 func _checkWritingEnd():
 	if self._windowText.visible_characters >= len(self._windowText.text):
-		self._windowText.visible_characters = -1
-		self._writing = false
+		self._windowText.visible_characters = len(self._windowText.text)
+		self._writing = self._paused
 		return
 
 	self._windowText.visible_characters += 3
