@@ -13,6 +13,8 @@ var _OnEnterCommandYOffset : float
 var _originalTypingSpacePos : Vector2
 
 func _init():
+	self.add_child(_commandExecuter)
+
 	const texture : CompressedTexture2D = preload("res://Assets/Terminal/terminal.png")
 	const font : FontFile = preload("res://Assets/Terminal/Determination.ttf")
 	const fontSize : int = 18
