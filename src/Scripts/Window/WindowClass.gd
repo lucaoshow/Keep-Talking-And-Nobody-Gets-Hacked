@@ -8,7 +8,6 @@ var _windowTextLimitOffset : float = 190
 var _writing : bool = false
 var _paused : bool = false
 
-var _moving : bool = false
 var _resizing : bool = false
 
 var _windowSprite : Sprite2D = Sprite2D.new()
@@ -22,10 +21,7 @@ var _originalScale : Vector2
 var _targetScaleX : float
 var _targetScaleY : float
 var _tResize : float
-var _tMove : float
-var _targetPosition : Vector2
 var _elapsedTimeResize : float
-var _elapsedTimeMove : float
 var _originalWindowTextSize : Vector2
 
 # CONSTRUCTOR
@@ -53,9 +49,6 @@ func _process(delta):
 	if self._resizing:
 		self._scale(delta)
 
-	if self._moving:
-		self._reposition(delta)
-
 	if self._textIsBiggerThanWindow():
 		self._eraseBeggining()
 
@@ -71,12 +64,6 @@ func resize(widthPercentage : float, heightPercentage : float, t : float):
 
 func returnToOriginalSize():
 	self.resize(self._originalScale.x / self._windowSprite.scale.x, self._originalScale.y / self._windowSprite.scale.y, 1)
-
-
-func moveTo(pos : Vector2, t : float):
-	self._targetPosition = pos
-	self._tMove = t
-	self._moving = true
 
 
 func writeAnimatedText(text : String):
@@ -167,13 +154,6 @@ func _scale(delta : float):
 	self._checkActionFinished(self._tResize)
 
 
-func _reposition(delta : float):
-	var tPerFrame : float = self._tMove * delta
-	self._elapsedTimeMove += tPerFrame
-	position = position.lerp(self._targetPosition, tPerFrame)
-	self._checkActionFinished(self._tMove)
-
-
 func _isInsideWindow(pos : Vector2):
 	return self._windowSprite.get_rect().has_point(pos)
 
@@ -195,10 +175,6 @@ func _checkActionFinished(t : float):
 	if self._elapsedTimeResize >= t and t == self._tResize:
 		self._resizing = false
 		self._elapsedTimeResize = 0
-
-	if self._elapsedTimeMove >= t and t == self._tMove:
-		self._moving = false
-		self._elapsedTimeMove = 0
 
 
 func _checkWritingEnd():

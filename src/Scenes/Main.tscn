@@ -36,7 +36,7 @@ texture = ExtResource("2_6cu8s")
 
 [node name="Menu" type="Sprite2D" parent="."]
 visible = false
-position = Vector2(195, 448.25)
+position = Vector2(194, 496)
 scale = Vector2(0.850877, 0.885321)
 texture = ExtResource("3_ccqlf")
 
@@ -45,6 +45,13 @@ offset_left = -227.0
 offset_top = -195.0
 offset_right = 229.0
 offset_bottom = 220.0
+flat = true
+
+[node name="Off" type="Button" parent="Menu"]
+offset_left = 75.0
+offset_top = 229.0
+offset_right = 104.0
+offset_bottom = 259.0
 flat = true
 
 [node name="Taskbar" type="Control" parent="."]
@@ -179,6 +186,7 @@ one_shot = true
 [connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
 [connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]
 [connection signal="button_up" from="Menu/Fake" to="." method="_on_fake_button_up"]
+[connection signal="button_up" from="Menu/Off" to="." method="_on_off_button_up"]
 [connection signal="child_exiting_tree" from="Taskbar" to="." method="_on_taskbar_child_exiting_tree"]
 [connection signal="timeout" from="Taskbar/Hours/Counter" to="Taskbar/Hours" method="_on_counter_timeout"]
 [connection signal="button_up" from="Taskbar/MenuButton" to="." method="_on_menu_button_button_up"]

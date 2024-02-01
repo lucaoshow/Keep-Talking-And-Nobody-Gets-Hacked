@@ -136,9 +136,14 @@ func _on_cmd_button_up():
 	commandExecuter.hackerOut.connect(hacker.onOut)
 	commandExecuter.hackerBack.connect(hacker.onBack)
 	commandExecuter.error.connect(loadingWindow.reduceTime)
+	commandExecuter.enterDirectory.connect(hacker.onEnterDirectory)
 	var terminal : Terminal = Terminal.new(commandExecuter)
 	terminal.entered.connect(terminalOpened)
 	terminal.position = PLAYER_POS
 	windows.append(terminal)
 	add_child(terminal)
 	hacker.setPlayerTerminal(terminal)
+
+
+func _on_off_button_up():
+	get_tree().change_scene_to_packed(badEndingScene)

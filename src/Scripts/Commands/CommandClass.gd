@@ -13,12 +13,13 @@ signal removedWrongFile
 signal removedRightFile
 signal removedCriticalFile
 signal error
+signal enterDirectory
 
 const COMMAND_DICT : Dictionary = {"clear" : "Clears the terminal's text.",
 	"config" : "Shows hardware specifications and system details.",
 	"exiftool <file>" : "Analyses the specified file.",
 	"find <dir || file>" : "Returns the absolute path to the specified directory or file.",
-	"frw <IP address>" : "Removes an user from the current network via firewall.",
+	"frw -r <IP address>" : "Removes an user from the current network via firewall.",
 	"ls" : "Lists the directories and files in the current directory.",
 	"nmap <IP address>" : "Scans the users in the network specified by the IP adress.",
 	"rm <dir || file>" : "Removes the specified directory or file.",
@@ -119,7 +120,7 @@ func executeCommand(command : String, terminal : Terminal):
 	if (command.begins_with("nmap ")):
 		self._nmapCommand(command, terminal)
 		return
-	if (command.begins_with("frw ")):
+	if (command.begins_with("frw -r ")):
 		self._frwCommand(command, terminal)
 		return
 
@@ -133,7 +134,7 @@ func _getHelpText():
 	- config :                         %s
 	- exiftool <file> :      %s
 	- find <dir || file> :       %s
-	- frw <user> :                  %s
+	- frw -r <user> :                  %s
 	- ls :                                   %s
 	- nmap <IP adress> :     %s
 	- rm <dir || file> :         %s
@@ -251,6 +252,8 @@ func _cdCommand(command : String, terminal : Terminal):
 		self.previousDirs.append(self.currentDir)
 		self.currentDir = dir
 		terminal.navigateToDir(dir)
+		if (dir == "ProgramFiles(x86)"):
+			self.enterDirectory.emit()
 		return
 
 	self._displayErrorMessage(terminal, errorMsg)
@@ -352,11 +355,11 @@ func _nmapCommand(command : String, terminal : Terminal):
 func _frwCommand(command : String, terminal : Terminal):
 	var errorMsg : String = 'IP address could not be found in current network.'
 	
-	if (self._isCommandEmpty(command, 6)):
+	if (self._isCommandEmpty(command, 7)):
 		self._displayErrorMessage(terminal, errorMsg)
 		return
 
-	var ip : String = command.get_slice(" ", 1)
+	var ip : String = command.get_slice(" ", 2)
 	var ipIsValid : bool = ip in self.ipAddresses
 
 	if (!ipIsValid):

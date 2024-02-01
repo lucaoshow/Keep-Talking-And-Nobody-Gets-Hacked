@@ -20,6 +20,7 @@ var _removedWrong : bool = false
 var _analysed : bool = false
 var _canAct : bool = true
 var _removedRight : int = 0
+var _enteredDir : int = 0
 var _terminalCount : int = 0
 var _playerTerminal : Terminal
 
@@ -105,6 +106,13 @@ func _delete():
 		super.setWindowText(text.erase(lastCharPos))
 		return
 	self._deleting = false
+
+
+func _playerBackOneDir(msg : String):
+	super.setWindowText(super.getWindowText() + "back-dir  -n  1  -u  Inteli\n" + msg + "\n" + self._getTerminalFormat(""))
+	self._playerTerminal.togglePause()
+	self._playerTerminal.forceCommand("cd..")
+	self._playerTerminal.togglePause()
 
 
 func canAct(condition : bool):
@@ -214,6 +222,18 @@ func onAnalysis():
 		self._write("Ei, tira o olho daí!\n" + self._getTerminalFormat("generate-popups\n") + self._getTerminalFormat(""))
 		self.popUps.emit()
 		self._analysed = true
+
+
+func onEnterDirectory():
+	if (self.canAct(self._enteredDir == 0)):
+		self._playerBackOneDir("Nem pense em entrar nesse diretório!")
+	if (self.canAct(self._enteredDir == 1)):
+		self._playerBackOneDir("Quantas vezes vou ter que te dizer?")
+	if (self.canAct(self._enteredDir == 2)):
+		self._playerBackOneDir("E se eu pedir por favor?")
+	if (self.canAct(self._enteredDir == 3)):
+		self._write("Entra então, eu desisto! Que insistente...", true)
+	self._enteredDir += 1
 
 
 func onPlayerWin():

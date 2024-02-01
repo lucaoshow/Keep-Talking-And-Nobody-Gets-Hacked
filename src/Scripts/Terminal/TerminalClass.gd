@@ -91,6 +91,10 @@ func navigateToDir(dir : String):
 	self._resetTypingSpaceText()
 
 
+func forceCommand(command : String):
+	self._enterCommand(self._typingSpace.text + command)
+
+
 # PRIVATE METHODS
 
 func _resetTerminalText():
