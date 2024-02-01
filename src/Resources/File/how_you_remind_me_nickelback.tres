@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://bp42lbyflhjh1"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_pgkyh"]
+
+[resource]
+script = ExtResource("1_pgkyh")
+fname = "how_you_remind_me_nickelback.mp3"
+directory = ".../Inteli/Music/how_you_remind_me_nickelback.mp3"
+size = "2 mB"
+modification = "2001:01:29 20:32:17"
+access = "2001:01:29 20:32:17"
+permissions = "rw- r-- r--"
+type = "MP3"
+extension = "mp3"
+author = "4Shared"

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://c8h8lgv25exhi"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_quedd"]
+
+[resource]
+script = ExtResource("1_quedd")
+fname = "the_sims_free_complete_2001.exe"
+directory = ".../Inteli/Downloads/the_sims_free_complete_2001.exe"
+size = "121 mB"
+modification = "2001:01:26 22:30:34"
+access = "2001:01:26 22:30:34"
+permissions = "rw- r-- r--"
+type = "EXECUTABLE"
+extension = "exe"
+author = "PirateBay"

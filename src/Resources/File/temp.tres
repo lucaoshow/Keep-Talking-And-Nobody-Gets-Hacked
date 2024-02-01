@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://bvy428rs2hrdv"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_otmbp"]
+
+[resource]
+script = ExtResource("1_otmbp")
+fname = "temp.phpp"
+directory = "C:/ProgramFiles(x86)/temp.phpp"
+size = "39 kB"
+modification = "2001:02:02 15:41:23"
+access = "2001:02:02 15:41:23"
+permissions = "rw- r-- rx-"
+type = "PHPP"
+extension = "PHPP"
+author = "Unknown"

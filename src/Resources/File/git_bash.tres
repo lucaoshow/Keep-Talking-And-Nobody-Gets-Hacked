@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://ca14vxh7vot1x"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_ux6q4"]
+
+[resource]
+script = ExtResource("1_ux6q4")
+fname = "git_bash.exe"
+directory = "C:/ProgramFiles/git_bash.exe"
+size = "90 kB"
+modification = "2001:01:23 10:12:56"
+access = "2001:01:23 10:12:56"
+permissions = "rx- rx- r--"
+type = "EXECUTABLE"
+extension = "exe"
+author = "Git"

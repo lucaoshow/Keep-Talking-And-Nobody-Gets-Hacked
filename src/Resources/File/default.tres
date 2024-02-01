@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://d2o0rj4xt7fjl"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_gau41"]
+
+[resource]
+script = ExtResource("1_gau41")
+fname = "default.txt"
+directory = "C:/ProgramFiles/default.txt"
+size = "2 kB"
+modification = "2001:01:14 14:32:10"
+access = "2001:01:14 14:32:10"
+permissions = "rw- r-- r--"
+type = "TEXT"
+extension = "txt"
+author = "Intel"
