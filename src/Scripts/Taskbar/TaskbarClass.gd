@@ -23,6 +23,13 @@ func _ready():
 	self.add_child(self._plusSprite)
 
 
+# PUBLIC METHODS
+
+func disableCloseButton(window : WindowDisplay):
+	for i in range(self.windows.size() - 1, -1, -1):
+		if windows[i].id == window.get_instance_id():
+			windows[i].freeCloseButton()
+
 # EVENT LISTENERS
 
 static func onCloseWindow(taskWindow : TaskbarWindow):

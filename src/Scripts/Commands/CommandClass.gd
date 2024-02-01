@@ -20,20 +20,29 @@ const REMOVABLE_DIRS : Array[String] = ["pt-BR", "Temp", "Music", "Pictures", "V
 const FRW_TEXT : Array[String] = ["Removing user from network...\n", "User successfully removed from network.\n",
 	"Error: removed self from network. Reseting network configurations...\n", "Configurations successfully reset.\n"]
 
+const CONFIG_STRING : String = """Host Name:                                USER_01
+	ProductID:                          7852-0413-4411-ECSGMLB
+	System Fabricator:              GAMELAB_GP
+	System Model:                         ECS0001
+	System Type:                           x32
+	Network Mask:                         192.168.1.0/16"""
+
+const IP_ADDRESS : String = "192.168.1.0/24"
+
+
 
 @onready var continueNmapTimer : Timer = Timer.new()
 @onready var continueFrwTimer : Timer = Timer.new()
 @onready var hackerOutTimer : Timer = Timer.new()
 var pauses : int = 1
-var ipAddress : String = "192.168.1." + str(randi_range(0, 1)) + "/" + str(randi_range(11, 28))
-var hackerIp : String = "192.168.1." + str(randi_range(2, 9))
+var hackerIp : String = "192.168.1." + str(randi_range(3, 9))
 var randomIp : String = "192.168.1." + str(randi_range(10, 19))
-var ipAddresses : Array[String] = [self.ipAddress.substr(0, 11), self.hackerIp, self.randomIp] 
+var ipAddresses : Array[String] = [self.IP_ADDRESS.substr(0, 11), self.hackerIp, self.randomIp] 
 var currentDir : String = "C"
 var previousDirs : Array[String]
 var pauseCommandTerminal : Terminal
 var hackerFiles : Array[String] = ["c23e5so67hc9e.exe", "sys.shell", "temp.phpp"]
-var configString : String = "" + self.ipAddress
+
 var nmapText : Array[String] = ["Starting Nmap 7.80 ( https://nmap.org ) at 2024-01-18 12:00 UTC\n\n",
 	"Nmap scan report for " + self.ipAddresses[0] +
 	"""\nHost is up (0.001s latency).
@@ -192,7 +201,7 @@ func _clear(terminal : Terminal):
 	terminal.returnToOriginalPos()
 
 func _config(terminal : Terminal):
-	self._writeToTerminal(terminal, self.configString + "\n")
+	self._writeToTerminal(terminal, self.CONFIG_STRING + "\n")
 
 
 func _ls(terminal : Terminal):
@@ -302,7 +311,7 @@ func _nmapCommand(command : String, terminal : Terminal):
 
 	var ip : String = command.get_slice(" ", 1)
 
-	if (ip != self.ipAddress):
+	if (ip != self.IP_ADDRESS):
 		self._displayErrorMessage(terminal, errorMsg)
 		return
 

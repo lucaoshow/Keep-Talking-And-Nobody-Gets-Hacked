@@ -3,7 +3,7 @@ class_name WindowDisplay
 
 
 const _ENTER_Y_OFFSET : float = 43.5
-const _WINDOW_TEXT_LIMIT_OFFSET : float = 250
+const _WINDOW_TEXT_LIMIT_OFFSET : float = 180
 
 var _writing : bool = false
 var _paused : bool = false
@@ -15,6 +15,7 @@ var _windowSprite : Sprite2D = Sprite2D.new()
 var _windowText : Label = Label.new()
 var _taskbarText : String
 var _windowAnimatedSprite : AnimatedSprite2D
+var closeButton : Button
 
 var _targetScaleX : float
 var _targetScaleY : float
@@ -35,9 +36,9 @@ func _init(windowTexture : CompressedTexture2D, font : FontFile, fontSize : int,
 	self._windowSprite.add_child(self._windowText)
 	self._originalWindowTextSize = self._windowText.size
 
-	var closeButton : Button = WindowUtils.generateWindowCloseButton(_windowSprite.get_rect().size)
-	closeButton.connect("button_up", self.closeWindow)
-	self.add_child(closeButton)
+	self.closeButton = WindowUtils.generateWindowCloseButton(_windowSprite.get_rect().size)
+	self.closeButton.connect("button_up", self.closeWindow)
+	self.add_child(self.closeButton)
 
 
 # UPDATE PER FRAME
@@ -79,6 +80,10 @@ func writeAnimatedText(text : String):
 
 func togglePause():
 	self._paused = !self._paused 
+
+
+func freeCloseButton():
+	self.closeButton.queue_free()
 
 
 func addChild(child : Object):

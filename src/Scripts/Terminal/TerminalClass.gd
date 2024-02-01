@@ -2,8 +2,10 @@ extends WindowDisplay
 class_name Terminal
 
 
+signal entered
+
 const _TYPING_SPACE_LIMIT_OFFSET : float = 330
-const _TYPING_SPACE_MAX_CHARS : int = 80
+const _TYPING_SPACE_MAX_CHARS : int = 70
 
 var TERMINAL_PATH : String = "C:\\>"
 var _commandExecuter : Commands = Commands.new()
@@ -12,12 +14,16 @@ var _typingSpace : LineEdit = LineEdit.new()
 var _OnEnterCommandYOffset : float
 var _originalTypingSpacePos : Vector2
 
-func _init():
+
+# CONSTRUCTOR
+
+func _init(commandExecuter : Commands):
+	self._commandExecuter = commandExecuter
 	self.add_child(_commandExecuter)
 
 	const texture : CompressedTexture2D = preload("res://Assets/Terminal/terminal.png")
 	const font : FontFile = preload("res://Assets/Terminal/Determination.ttf")
-	const fontSize : int = 18
+	const fontSize : int = 15
 	const terminalFontColor : Color = Color8(242, 240, 228, 255)
 
 	super._init(texture, font, fontSize, terminalFontColor)
@@ -40,7 +46,12 @@ func _init():
 	self._OnEnterCommandYOffset = super.getEnterYOffset()
 
 
+func _ready():
+	self.entered.emit()
+
+
 # UPDATE PER FRAME
+
 func _process(delta):
 	super._process(delta)
 	if super.isWriting():
