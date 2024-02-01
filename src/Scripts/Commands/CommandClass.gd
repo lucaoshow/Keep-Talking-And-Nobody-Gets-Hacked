@@ -17,8 +17,8 @@ const REMOVABLE_DIRS : Array[String] = ["pt-BR", "Temp", "Music", "Pictures", "V
 	"Favourite", "Downloads", "Contacts", "Documents", "Git", "My Games", "WinRAR",
 	"WindowsXPInstallationAssistant", "AdvancedInstallers", "Clips", "LoL"]
 
-const FRW_TEXT : Array[String] = ["Removing user from network...", "User successfully removed from network.",
-	"Error: removed self from network. Reseting network configurations...", "Configurations successfully reset."]
+const FRW_TEXT : Array[String] = ["Removing user from network...\n", "User successfully removed from network.\n",
+	"Error: removed self from network. Reseting network configurations...\n", "Configurations successfully reset.\n"]
 
 
 @onready var continueNmapTimer : Timer = Timer.new()
@@ -63,7 +63,7 @@ func _ready():
 	self.continueNmapTimer.one_shot = true
 	self.continueFrwTimer.one_shot = true
 	self.hackerOutTimer.one_shot = true
-	self.hackerOutTimer.wait_time = 35
+	self.hackerOutTimer.wait_time = 50
 	self.continueNmapTimer.connect("timeout", self.onContinueNmapTimeout)
 	self.continueFrwTimer.connect("timeout", self.onContinueFrwTimeout)
 	self.hackerOutTimer.connect("timeout", self.onHackerOutTimeout)
@@ -116,7 +116,7 @@ func _getHelpText():
 	- ls :                                   %s
 	- nmap <IP adress> :     %s
 	- rm <dir || file> :         %s
-	- users-ls :                     %s"""
+	- users-ls :                     %s\n"""
 
 
 func _getFormattedLsText():
@@ -133,19 +133,18 @@ func _getFileAnalysisText():
 	Directory                                               :   %s
 	File Size                                                :   %s
 	File Modification Date/Time       :   %s
-	File Access Date/Time                     :   %s
 	File Permissions                               :   %s
 	File Type                                               :   %s
 	File Type Extensions                       :   %s
-	Author                                                     :   %s"""
+	Author                                                     :   %s\n"""
 
 
 func _getPathToFile(fileName : String, previousDir : String):
-	if (previousDir.begins_with("C/")):
-		return "C:/" + previousDir.substr(2)
+	if (previousDir.begins_with("C\\")):
+		return "C:\\" + previousDir.substr(2)
 	for key in Directories.directories.keys():
 		if fileName in Directories.directories[key]:
-			return self._getPathToFile(key, key + "/" + previousDir)
+			return self._getPathToFile(key, key + "\\" + previousDir)
 
 	return ""
 
@@ -163,10 +162,9 @@ func _displayErrorMessage(terminal : Terminal, message : String):
 
 func _analyzeFile(terminal : Terminal, fileName : String):
 	var slicingIndex : int = fileName.rfind(".")
-	print(fileName.substr(0, slicingIndex))
 	var file : FileResource = load("res://Resources/File/" + fileName.substr(0, slicingIndex) + ".tres")
 	var properties : Array[String] = [file.fname, file.directory, file.size, file.modification,
-		file.access, file.permissions, file.type, file.extension, file.author]
+		file.permissions, file.type, file.extension, file.author]
 
 	self._writeToTerminal(terminal, self._getFileAnalysisText() % properties)
 
@@ -324,20 +322,10 @@ func _frwCommand(command : String, terminal : Terminal):
 		return
 
 	var ip : String = command.get_slice(" ", 1)
-	var ipIsValid : bool = ip in self.ipAdresses
+	var ipIsValid : bool = ip in self.ipAddresses
 
 	if (!ipIsValid):
 		self._displayErrorMessage(terminal, errorMsg)
-		return
-
-	self.pauses = 0
-	self.continueFrwTimer.wait_time = 15
-	terminal.togglePause()
-	self._writeToTerminal(self.pauseCommandTerminal, self.FRW_TEXT[pauses])
-	self.continueFrwTimer.start()
-
-	if (ip == self.ipAddress.substr(0, 11)):
-		self.pauses = 1
 		return
 
 	if (ip == self.hackerIp):
@@ -347,15 +335,26 @@ func _frwCommand(command : String, terminal : Terminal):
 		return
 
 	if (ip == self.randomIp):
-		self.ipAdresses.erase(self.randomIp)
 		self._removeFromNmapText(self.randomIp)
+		self.ipAddresses.erase(self.randomIp)
+
+	self.pauses = 0
+	if (ip == self.ipAddresses[0]):
+		self.pauses = 1
+		return
+
+	self.continueFrwTimer.wait_time = 15
+	terminal.togglePause()
+	self.pauseCommandTerminal = terminal
+	self._writeToTerminal(self.pauseCommandTerminal, self.FRW_TEXT[pauses])
+	self.continueFrwTimer.start()
 
 
 # EVENT LISTENERS
 
 func onContinueNmapTimeout():
 	self.continueNmapTimer.wait_time = 13
-	if (self.pauses <= 2):
+	if (self.pauses <= self.nmapText.size() - 2):
 		self._writeToTerminal(self.pauseCommandTerminal, self.nmapText[self.pauses])
 		self.continueNmapTimer.start()
 		self.pauses += 1
@@ -366,12 +365,15 @@ func onContinueNmapTimeout():
 
 func onContinueFrwTimeout():
 	self.pauses += 1
-	if (pauses > 1):
-		self.continueFrwTimer.wait_time = 20
-		self.continueFrwTimer.start()
 
 	self._writeToTerminal(self.pauseCommandTerminal, self.FRW_TEXT[self.pauses])
-	self.pauseCommandTerminal.togglePause()
+
+	if (self.pauses == 1 or self.pauses == 3):
+		self.pauseCommandTerminal.togglePause()
+		return
+
+	self.continueFrwTimer.wait_time = 20
+	self.continueFrwTimer.start()
 
 
 func onHackerOutTimeout():

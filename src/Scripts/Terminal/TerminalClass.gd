@@ -65,7 +65,6 @@ func returnToOriginalPos():
 func goBackOneDir():
 	var index : int = self.TERMINAL_PATH.rfind("\\")
 	var charsToDelete : int = (len(self.TERMINAL_PATH)) - index
-	print(self.TERMINAL_PATH.erase(index, charsToDelete))
 	self.TERMINAL_PATH = self.TERMINAL_PATH.erase(index, charsToDelete)
 	if (self.TERMINAL_PATH[-1] == ":"):
 		self.TERMINAL_PATH += "\\"
