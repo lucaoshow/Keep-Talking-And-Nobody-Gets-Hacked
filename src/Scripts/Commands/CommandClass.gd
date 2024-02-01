@@ -14,7 +14,8 @@ const COMMAND_DICT : Dictionary = {"clear" : "Clears the terminal's text.",
 	"users-ls" : "Lists the users present in the system."}
 
 const REMOVABLE_DIRS : Array[String] = ["pt-BR", "Temp", "Music", "Pictures", "Videos",
-	"Favourite", "Downloads", "Contacts", "Documents"]
+	"Favourite", "Downloads", "Contacts", "Documents", "Git", "My Games", "WinRAR",
+	"WindowsXPInstallationAssistant", "AdvancedInstallers", "Clips", "LoL"]
 
 const FRW_TEXT : Array[String] = ["Removing user from network...", "User successfully removed from network.",
 	"Error: removed self from network. Reseting network configurations...", "Configurations successfully reset."]
@@ -31,6 +32,7 @@ var ipAddresses : Array[String] = [self.ipAddress.substr(0, 11), self.hackerIp, 
 var currentDir : String = "C"
 var previousDirs : Array[String]
 var pauseCommandTerminal : Terminal
+var hackerFiles : Array[String] = ["c23e5so67hc9e.exe", "sys.shell", "temp.phpp"]
 var configString : String = "" + self.ipAddress
 var nmapText : Array[String] = ["Starting Nmap 7.80 ( https://nmap.org ) at 2024-01-18 12:00 UTC\n\n",
 	"Nmap scan report for " + self.ipAddresses[0] +
@@ -127,15 +129,15 @@ func _getFormattedLsText():
 
 
 func _getFileAnalysisText():
-	return """File Name                                           : %s
-	Directory                                          : %s
-	File Size                                           : %s
-	File Modification Date/Time       : %s
-	File Access Date/Time                   : %s
-	File Permissions                            : %s
-	File Type                                           : %s
-	File Type Extensions                      : %s
-	Author                                                : %s"""
+	return """File Name                                                :   %s
+	Directory                                               :   %s
+	File Size                                                :   %s
+	File Modification Date/Time       :   %s
+	File Access Date/Time                     :   %s
+	File Permissions                               :   %s
+	File Type                                               :   %s
+	File Type Extensions                       :   %s
+	Author                                                     :   %s"""
 
 
 func _getPathToFile(fileName : String, previousDir : String):
@@ -160,7 +162,9 @@ func _displayErrorMessage(terminal : Terminal, message : String):
 
 
 func _analyzeFile(terminal : Terminal, fileName : String):
-	var file : FileResource = load("res://Resources/File/" + fileName)
+	var slicingIndex : int = fileName.rfind(".")
+	print(fileName.substr(0, slicingIndex))
+	var file : FileResource = load("res://Resources/File/" + fileName.substr(0, slicingIndex) + ".tres")
 	var properties : Array[String] = [file.fname, file.directory, file.size, file.modification,
 		file.access, file.permissions, file.type, file.extension, file.author]
 
@@ -257,8 +261,10 @@ func _removeCommand(command : String, terminal : Terminal):
 	if (fileOrDir not in Directories.directories[self.currentDir]):
 		self._displayErrorMessage(terminal, errorMsg)
 		return
-	
+
 	if (fileOrDir.contains(".")):
+		if (fileOrDir == "system.dll"):
+			return #TODO: LOSE
 		Directories.directories[self.currentDir].erase(fileOrDir)
 		return
 
@@ -371,10 +377,10 @@ func onContinueFrwTimeout():
 func onHackerOutTimeout():
 	self.hackerIp = "192.168.1." + str(randi_range(2, 9))
 	self.nmapText.append("Nmap scan report for " + self.hackerIp +
-	"""\nHost is up (0.002s latency).
-	Not shown: 997 closed ports
+	"""\nHost is up (0.004s latency).
+	Not shown: 999 closed ports
 	PORT    STATE SERVICE
 	22/tcp  open  ssh
 	80/tcp  open  http
-	139/tcp open dns
-	443/tcp open  https\n\n""",)
+	139/tcp open NetBios
+	443/tcp open  ftp\n\n""",)

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://dm0gubvgc1k7m"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_mfyce"]
+
+[resource]
+script = ExtResource("1_mfyce")
+fname = "git_installer.exe"
+directory = "C:/Users/Inteli/Downloads/git_installer.exe"
+size = "10 mB"
+modification = "2001:01:23 10:09:15"
+access = "2001:01:23 10:09:15"
+permissions = "r-- r-- r--"
+type = "EXECUTABLE"
+extension = "exe"
+author = "Git"

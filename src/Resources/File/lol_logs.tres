@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://bekq45kou5bjk"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_4msdi"]
+
+[resource]
+script = ExtResource("1_4msdi")
+fname = "lol_logs.txt"
+directory = "C:/Users/Inteli/AppData/lol_logs.txt"
+size = "1 kB"
+modification = "2001:02:01 08:31:32"
+access = "2001:02:01 08:31:32"
+permissions = "rw- r-- r--"
+type = "TEXT"
+extension = "txt"
+author = "Inteli"

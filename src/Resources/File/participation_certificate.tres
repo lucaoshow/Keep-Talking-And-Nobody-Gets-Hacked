@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://fvdcid1s8kcp"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_hgd3c"]
+
+[resource]
+script = ExtResource("1_hgd3c")
+fname = "participation_certificate.pdf"
+directory = ".../Inteli/Documents/participation_certificate.pdf"
+size = "212 kB"
+modification = "2001:02:02 10:30:03"
+access = "2001:02:02 10:30:03"
+permissions = "rw- r-- r--"
+type = "PDF"
+extension = "pdf"
+author = "Inteli"

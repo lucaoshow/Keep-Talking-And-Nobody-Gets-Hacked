@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://4vj45xdgefob"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_53qhq"]
+
+[resource]
+script = ExtResource("1_53qhq")
+fname = "LoL.exe"
+directory = "C:/Users/Inteli/Desktop/LoL.exe"
+size = "260 kB"
+modification = "2001:01:19 23:46:21"
+access = "2001:02:01 08:20:13"
+permissions = "r-- r-- r--"
+type = "EXECUTABLE"
+extension = "exe"
+author = "Riot Games"

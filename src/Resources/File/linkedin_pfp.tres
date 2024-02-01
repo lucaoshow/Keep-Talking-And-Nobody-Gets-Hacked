@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://dc0xdbsujjtlh"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_edmm6"]
+
+[resource]
+script = ExtResource("1_edmm6")
+fname = "linkedin_pfp.jpg"
+directory = "C:/Users/Inteli/Documents/linkedin_pfp.jpg"
+size = "201 kB"
+modification = "2001:02:01 09:32:02"
+access = "2001:02:01 09:32:02"
+permissions = "rw- r-- r--"
+type = "JPEG"
+extension = "jpg"
+author = "Inteli"

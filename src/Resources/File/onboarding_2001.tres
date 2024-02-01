@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://ckk0350y0pxwj"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_38jxr"]
+
+[resource]
+script = ExtResource("1_38jxr")
+fname = "onboarding_2001.mp4"
+directory = ".../Inteli/Videos/onboarding_2001.mp4"
+size = "90 mB"
+modification = "2001:02:02 16:32:02"
+access = "2001:02:02 16:32:02"
+permissions = "rw- r-- r--"
+type = "MP4"
+extension = "mp4"
+author = "Inteli"

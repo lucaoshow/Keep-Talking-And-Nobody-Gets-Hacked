@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://b00253idywil2"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_0jn3l"]
+
+[resource]
+script = ExtResource("1_0jn3l")
+fname = "insane_thresh_hook.mp4"
+directory = ".../MyGames/LoL/Clips/insane_thresh_hook.mp4"
+size = "15 mB"
+modification = "2001:02:01 00:43:18"
+access = "2001:02:01 00:43:18"
+permissions = "rw- r-- r--"
+type = "MP4"
+extension = "mp4"
+author = "Inteli"

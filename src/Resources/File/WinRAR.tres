@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://f4ibh8703q0f"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_ms1y0"]
+
+[resource]
+script = ExtResource("1_ms1y0")
+fname = "WinRAR.exe"
+directory = "C:/ProgramFiles/WinRAR/WinRAR.exe"
+size = "113 kB"
+modification = "2001:01:26 22:25:13"
+access = "2001:01:26 22:25:13"
+permissions = "rx- r-- r--"
+type = "EXECUTABLE"
+extension = "exe"
+author = "WinRAR"
