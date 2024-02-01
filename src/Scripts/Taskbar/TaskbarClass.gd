@@ -26,9 +26,23 @@ func _ready():
 # PUBLIC METHODS
 
 func disableCloseButton(window : WindowDisplay):
-	for i in range(self.windows.size() - 1, -1, -1):
+	for i in range(windows.size() - 1, -1, -1):
 		if windows[i].id == window.get_instance_id():
 			windows[i].freeCloseButton()
+			break
+
+
+func toggleWindow(w : WindowDisplay):
+	var id : int = w.get_instance_id()
+	for i in range(windows.size() - 1, -1, -1):
+		if windows[i].id == id:
+			var window : TaskbarWindow = windows[i]
+			windows.remove_at(i)
+			window.queue_free()
+			return
+	self.onAddNewWindow(w)
+
+
 
 # EVENT LISTENERS
 
@@ -38,7 +52,7 @@ static func onCloseWindow(taskWindow : TaskbarWindow):
 
 
 func onAddNewWindow(window : WindowDisplay):
-	self.windows.append(TaskbarWindow.new(window))
+	windows.append(TaskbarWindow.new(window))
 	self._displayWindows()
 
 
@@ -50,7 +64,7 @@ func onRemoveWindow(id : int):
 # PRIVATE METHODS
 
 func _displayWindows():
-	var amount = self.windows.size()
+	var amount = windows.size()
 	if !amount:
 		return
 
@@ -58,16 +72,16 @@ func _displayWindows():
 	var limitIndex : int = startIndex - _MAX_WINDOWS
 
 	windows[startIndex].position = self._WINDOW_INITIAL_POS
-	if !self.windows[startIndex].is_inside_tree():
-		self.add_child(self.windows[startIndex])
+	if !windows[startIndex].is_inside_tree():
+		self.add_child(windows[startIndex])
 
 	for w in range(startIndex - 1, -1, -1):
-		var window = self.windows[w]
+		var window = windows[w]
 		if w <= limitIndex:
 			window.visible = false
 			continue
 		window.visible = true
-		window.position = self.windows[w+1].position + self._WINDOW_POS_OFFSET
+		window.position = windows[w+1].position + self._WINDOW_POS_OFFSET
 		if !window.is_inside_tree():
 			self.add_child(window)
 
@@ -75,7 +89,7 @@ func _displayWindows():
 
 
 func _freeCorrespondentTaskWindow(id : int):
-	for i in range(self.windows.size() - 1, -1, -1):
+	for i in range(windows.size() - 1, -1, -1):
 		if windows[i].id == id:
 			var window : TaskbarWindow = windows[i]
 			windows.remove_at(i)

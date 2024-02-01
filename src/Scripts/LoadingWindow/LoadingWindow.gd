@@ -2,16 +2,17 @@ extends Node2D
 
 
 signal timeEnding
+signal timeEnded
 
 @onready var time : Label = $RemainingTime
 @onready var counter : Timer = $Timer
 
-const Y_POS : int = 578
+const Y_POS : int = 625
 
 var emitted : bool = false
 var goingUp : bool = false
 var seconds : int = 59
-var minutes : int = 6
+var minutes : int = 8
 
 func startLoading():
 	counter.start()
@@ -29,7 +30,7 @@ func goUp():
 func updateTime():
 	seconds -= 1
 	if (seconds < 0 and minutes > 0):
-		seconds = 59
+		seconds = 59 + seconds
 		minutes -= 1
 	time.text = "Remaining time: " + str("%02d" % minutes) + ":" + str("%02d" % seconds)
 	if (!emitted and minutes == 1):
@@ -41,16 +42,23 @@ func updateProgressBar():
 	$LoadingBar.value += 1
 	if ($LoadingBar.value == $LoadingBar.max_value):
 		counter.stop()
-		lose()
-
-
-func lose():
-	pass
+		timeEnded.emit()
 
 
 func _process(_delta):
 	if (goingUp):
 		goUp()
+
+
+func reduceTime():
+	seconds -= 10
+
+
+func toggleTimer():
+	if (counter.is_stopped()):
+		counter.start()
+		return
+	counter.stop()
 
 
 func _on_timer_timeout():

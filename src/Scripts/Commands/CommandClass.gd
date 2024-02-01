@@ -3,9 +3,20 @@ extends Node
 class_name Commands
 
 
+signal help
+signal users
+signal scan
+signal hackerOut
+signal hackerBack
+signal analyseFile
+signal removedWrongFile
+signal removedRightFile
+signal removedCriticalFile
+signal error
+
 const COMMAND_DICT : Dictionary = {"clear" : "Clears the terminal's text.",
 	"config" : "Shows hardware specifications and system details.",
-	"exiftool <file>" : "Analyzes the specified file.",
+	"exiftool <file>" : "Analyses the specified file.",
 	"find <dir || file>" : "Returns the absolute path to the specified directory or file.",
 	"frw <IP address>" : "Removes an user from the current network via firewall.",
 	"ls" : "Lists the directories and files in the current directory.",
@@ -29,11 +40,10 @@ const CONFIG_STRING : String = """Host Name:                                USER
 
 const IP_ADDRESS : String = "192.168.1.0/24"
 
-
-
 @onready var continueNmapTimer : Timer = Timer.new()
 @onready var continueFrwTimer : Timer = Timer.new()
 @onready var hackerOutTimer : Timer = Timer.new()
+
 var pauses : int = 1
 var hackerIp : String = "192.168.1." + str(randi_range(3, 9))
 var randomIp : String = "192.168.1." + str(randi_range(10, 19))
@@ -86,6 +96,8 @@ func _ready():
 func executeCommand(command : String, terminal : Terminal):
 	command = command.strip_edges()
 	terminal.setWindowText(terminal.getWindowText() + terminal.TERMINAL_PATH + command + "\n")
+	if (command == ""):
+		return
 	if ((command in self.COMMAND_DICT.keys() and !command.contains("<") and !command.contains("-")) or command == "help"):
 		call("_" + command, terminal)
 		return
@@ -111,7 +123,7 @@ func executeCommand(command : String, terminal : Terminal):
 		self._frwCommand(command, terminal)
 		return
 
-	self._displayErrorMessage(terminal, 'Command or file not found. Type "help" to see the list of available commands.')
+	self._displayErrorMessage(terminal, 'Command not found. Type "help" to see the list of available commands.')
 
 
 # PRIVATE METHODS
@@ -166,10 +178,12 @@ func _writeToTerminal(terminal : Terminal, msg : String):
 
 func _displayErrorMessage(terminal : Terminal, message : String):
 	self._writeToTerminal(terminal, "Error:  " + message + "\n")
-	# TODO: Penalize player
+	self.error.emit()
 
 
-func _analyzeFile(terminal : Terminal, fileName : String):
+func _analyseFile(terminal : Terminal, fileName : String):
+	if (fileName in self.hackerFiles):
+		self.analyseFile.emit()
 	var slicingIndex : int = fileName.rfind(".")
 	var file : FileResource = load("res://Resources/File/" + fileName.substr(0, slicingIndex) + ".tres")
 	var properties : Array[String] = [file.fname, file.directory, file.size, file.modification,
@@ -182,6 +196,7 @@ func _removeFromNmapText(ip : String):
 	for t in range(1, len(self.nmapText)):
 		if (self.nmapText[t].contains(ip)):
 			self.nmapText.remove_at(t)
+			break
 
 
 func _isCommandEmpty(command : String, minLength : int):
@@ -194,6 +209,7 @@ func _isCommandEmpty(command : String, minLength : int):
 
 func _help(terminal : Terminal):
 	self._writeToTerminal(terminal, self._getHelpText() % self.COMMAND_DICT.values())
+	self.help.emit()
 
 
 func _clear(terminal : Terminal):
@@ -250,7 +266,7 @@ func _exiftool(command : String, terminal : Terminal):
 	var fileName : String = command.get_slice(" ", 1)
 
 	if (fileName in Directories.directories[self.currentDir]):
-		self._analyzeFile(terminal, fileName)
+		self._analyseFile(terminal, fileName)
 		return
 
 	self._displayErrorMessage(terminal, errorMsg)
@@ -271,8 +287,16 @@ func _removeCommand(command : String, terminal : Terminal):
 
 	if (fileOrDir.contains(".")):
 		if (fileOrDir == "system.dll"):
-			return #TODO: LOSE
+			self.removedCriticalFile.emit()
+			return
+		if (fileOrDir in self.hackerFiles):
+			self.hackerFiles.erase(fileOrDir)
+			self.removedRightFile.emit()
+			Directories.directories[self.currentDir].erase(fileOrDir)
+			return
+
 		Directories.directories[self.currentDir].erase(fileOrDir)
+		self.removedWrongFile.emit()
 		return
 
 	if (fileOrDir in self.REMOVABLE_DIRS):
@@ -283,6 +307,7 @@ func _removeCommand(command : String, terminal : Terminal):
 
 func _usersLs(_command : String, terminal : Terminal):
 	self._writeToTerminal(terminal, "Users:\n- " + "\n- ".join(Directories.directories["Users"]) + "\n")
+	self.users.emit()
 
 
 func _find(command : String, terminal : Terminal):
@@ -304,7 +329,7 @@ func _find(command : String, terminal : Terminal):
 
 func _nmapCommand(command : String, terminal : Terminal):
 	var errorMsg : String = 'Unknown IP address. Type "config" to see the IP address of the current network'
-	
+
 	if (self._isCommandEmpty(command, 6)):
 		self._displayErrorMessage(terminal, errorMsg)
 		return
@@ -321,6 +346,7 @@ func _nmapCommand(command : String, terminal : Terminal):
 	self.pauseCommandTerminal = terminal
 	self._writeToTerminal(self.pauseCommandTerminal, self.nmapText[0])
 	self.continueNmapTimer.start()
+	self.scan.emit()
 
 
 func _frwCommand(command : String, terminal : Terminal):
@@ -341,6 +367,7 @@ func _frwCommand(command : String, terminal : Terminal):
 		self._removeFromNmapText(self.hackerIp)
 		self.ipAddresses.erase(self.hackerIp)
 		self.hackerOutTimer.start()
+		self.hackerOut.emit()
 		return
 
 	if (ip == self.randomIp):
@@ -395,3 +422,4 @@ func onHackerOutTimeout():
 	80/tcp  open  http
 	139/tcp open NetBios
 	443/tcp open  ftp\n\n""",)
+	self.hackerBack.emit()

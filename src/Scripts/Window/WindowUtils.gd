@@ -3,8 +3,8 @@ class_name WindowUtils
 const _PIXELATE_TEXT_SCALE : Vector2 = Vector2(1.5, 1.5)
 const _SIZE_OFFSET : int = 40
 const _WINDOW_TEXT_POS_OFFSET : Vector2 = Vector2(16, 50)
-const _WINDOW_TEXT_LINE_SPACING : int = 10
-const _TYPING_SPACE_POS_OFFSET : Vector2 = Vector2(10, 35)
+const _WINDOW_TEXT_LINE_SPACING : int = 7
+const _TYPING_SPACE_POS_OFFSET : Vector2 = Vector2(10, 33)
 
 const _IMAGE_POSITION : Vector2 = Vector2(0, 18)
 const _IMAGE_TARGET_X_SIZE : int = 27

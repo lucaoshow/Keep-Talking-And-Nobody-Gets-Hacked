@@ -4,8 +4,8 @@ class_name Terminal
 
 signal entered
 
-const _TYPING_SPACE_LIMIT_OFFSET : float = 330
-const _TYPING_SPACE_MAX_CHARS : int = 70
+const _TYPING_SPACE_LIMIT_OFFSET : float = 270
+const _TYPING_SPACE_MAX_CHARS : int = 80
 
 var TERMINAL_PATH : String = "C:\\>"
 var _commandExecuter : Commands = Commands.new()

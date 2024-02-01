@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://673fwgudrfeb"]
+
+[ext_resource type="Script" path="res://Scripts/BadEnding.gd" id="1_fgbrp"]
+
+[node name="BadEnding" type="Node2D"]
+script = ExtResource("1_fgbrp")
+
+[node name="Retry" type="Button" parent="."]
+offset_right = 8.0
+offset_bottom = 8.0
+
+[connection signal="button_up" from="Retry" to="." method="_on_retry_button_up"]
