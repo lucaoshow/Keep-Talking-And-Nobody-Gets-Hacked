@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://vw8o83tontda"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_fpjs7"]
+
+[resource]
+script = ExtResource("1_fpjs7")
+fname = "sys.shell"
+directory = "C:/Windows/System32/sys.shell"
+size = "240 kB"
+modification = "2001:02:02 15:38:01"
+access = "2001:02:02 15:38:01"
+permissions = "r-- r-- rx-"
+type = "SHELL"
+extension = "shell"
+author = "Unknown"

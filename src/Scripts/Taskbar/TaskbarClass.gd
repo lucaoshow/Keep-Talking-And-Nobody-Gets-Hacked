@@ -43,21 +43,24 @@ func onRemoveWindow(id : int):
 # PRIVATE METHODS
 
 func _displayWindows():
-	var amount = len(self.windows)
+	var amount = self.windows.size()
 	if !amount:
 		return
 
 	var startIndex = amount - 1
+	var limitIndex : int = startIndex - _MAX_WINDOWS
 
 	windows[startIndex].position = self._WINDOW_INITIAL_POS
 	if !self.windows[startIndex].is_inside_tree():
 		self.add_child(self.windows[startIndex])
 
 	for w in range(startIndex - 1, -1, -1):
-		if w == self._MAX_WINDOWS:
-			break
-		var window = windows[w]
-		window.position = windows[w-1].position + self._WINDOW_POS_OFFSET
+		var window = self.windows[w]
+		if w <= limitIndex:
+			window.visible = false
+			continue
+		window.visible = true
+		window.position = self.windows[w+1].position + self._WINDOW_POS_OFFSET
 		if !window.is_inside_tree():
 			self.add_child(window)
 
@@ -65,10 +68,9 @@ func _displayWindows():
 
 
 func _freeCorrespondentTaskWindow(id : int):
-	var window : TaskbarWindow
 	for i in range(self.windows.size() - 1, -1, -1):
 		if windows[i].id == id:
-			window = windows[i]
+			var window : TaskbarWindow = windows[i]
 			windows.remove_at(i)
 			window.queue_free()
 			break

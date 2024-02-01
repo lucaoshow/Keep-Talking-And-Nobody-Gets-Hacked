@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://bipewyyugabyt"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_0qyek"]
+
+[resource]
+script = ExtResource("1_0qyek")
+fname = "gamelab_logo.png"
+directory = "C:/Users/Inteli/Pictures/gamelab_logo.png"
+size = "198 kB"
+modification = "2001:02:02 14:14:52"
+access = "2001:02:02 14:14:52"
+permissions = "rw- r-- r--"
+type = "PNG"
+extension = "png"
+author = "Inteli"

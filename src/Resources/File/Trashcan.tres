@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://cfmwlor35rph5"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_jvkkb"]
+
+[resource]
+script = ExtResource("1_jvkkb")
+fname = "Trashcan.exe"
+directory = "C:/Users/Inteli/Desktop/Trashcan.exe"
+size = "2 kB"
+modification = "2001:01:14 14:30:15"
+access = "2001:01:14 14:30:15"
+permissions = "r-- r-- r--"
+type = "EXECUTABLE"
+extension = "exe"
+author = "Microsoft"

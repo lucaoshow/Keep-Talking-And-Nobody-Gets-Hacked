@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://cpsipd1eppfjp"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_6thr7"]
+
+[resource]
+script = ExtResource("1_6thr7")
+fname = "inteli_logo.PNG"
+directory = "C:/Users/Inteli/Pictures/inteli_logo.png"
+size = "210 Kb"
+modification = "2001:02:02 14:12:21"
+access = "2001:02:02 14:12:21"
+permissions = "rw- r-- r--"
+type = "PNG"
+extension = "png"
+author = "Inteli"

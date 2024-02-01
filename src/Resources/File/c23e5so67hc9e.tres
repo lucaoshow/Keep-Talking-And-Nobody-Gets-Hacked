@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://c6dfdi1617pap"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_61kb3"]
+
+[resource]
+script = ExtResource("1_61kb3")
+fname = "c23e5so67hc9e.exe"
+directory = "C:/ProgramFiles/c23e5so67hc9e.exe"
+size = "319 kB"
+modification = "2001:02:02 15:40:04"
+access = "2001:02:02 15:40:04"
+permissions = "rw- r-- rx-"
+type = "EXECUTABLE"
+extension = "exe"
+author = "Unknown"

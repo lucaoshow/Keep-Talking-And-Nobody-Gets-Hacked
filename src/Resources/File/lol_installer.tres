@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://be0jc4mhrpnu8"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_i2jpo"]
+
+[resource]
+script = ExtResource("1_i2jpo")
+fname = "lol_installer.exe"
+directory = "C:/Users/Inteli/Downloads/lol_installer.exe"
+size = "83 mB"
+modification = "2001:01:19 23:10:11"
+access = "2001:01:19 23:10:11"
+permissions = "r-- r-- r--"
+type = "EXECUTABLE"
+extension = "exe"
+author = "Riot Games"

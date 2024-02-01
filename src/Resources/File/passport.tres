@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="FileResource" load_steps=2 format=3 uid="uid://c30wv7ydjjdcg"]
+
+[ext_resource type="Script" path="res://Scripts/File/FileResourceClass.gd" id="1_5diaa"]
+
+[resource]
+script = ExtResource("1_5diaa")
+fname = "passport.pdf"
+directory = "C:/Users/Inteli/Documents/passport.pdf"
+size = "404 kB"
+modification = "2001:01:28 12:02:19"
+access = "2001:01:28 12:02:19"
+permissions = "rw- r-- r--"
+type = "PDF"
+extension = "pdf"
+author = "Inteli"
