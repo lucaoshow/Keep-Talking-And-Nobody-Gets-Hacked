@@ -7,7 +7,6 @@ class_name FileResource
 @export var directory : String
 @export var size : String
 @export var modification : String
-@export var access : String
 @export var permissions : String
 @export var type : String
 @export var extension : String
