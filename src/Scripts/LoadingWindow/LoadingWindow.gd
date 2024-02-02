@@ -56,6 +56,7 @@ func _process(_delta):
 
 func reduceTime():
 	seconds -= 10
+	$LoadingBar.value += 10
 
 
 func toggleTimer():
