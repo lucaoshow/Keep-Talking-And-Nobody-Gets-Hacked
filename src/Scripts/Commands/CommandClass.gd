@@ -187,6 +187,19 @@ func _displayErrorMessage(terminal : Terminal, message : String):
 	self.error.emit()
 
 
+func _cdMultipleDirs(dirs : Array[String], terminal : Terminal):
+	var previousDir : String = self.currentDir
+	for d in dirs:
+		if (d in Directories.directories[previousDir]):
+			previousDir = d
+			continue
+		self._displayErrorMessage(terminal, 'Directory not found. Type "ls" to see the list of available directories.')
+		return
+	self.currentDir = previousDir
+	self.previousDirs.append_array(dirs)
+	terminal.navigateToDir("\\".join(dirs))
+
+
 func _analyseFile(terminal : Terminal, fileName : String):
 	if (fileName in self.hackerFiles):
 		self.analyseFile.emit()
@@ -247,6 +260,13 @@ func _cdCommand(command : String, terminal : Terminal):
 	if (isBack and self.previousDirs.size()):
 		self.currentDir = self.previousDirs.pop_back()
 		terminal.goBackOneDir()
+		return
+
+	if (dir.contains("/")):
+		self._cdMultipleDirs(dir.split("/"), terminal)
+		return
+	if (dir.contains("\\")):
+		self._cdMultipleDirs(dir.split("\\"), terminal)
 		return
 
 	if (dir not in Directories.directories.keys()):
