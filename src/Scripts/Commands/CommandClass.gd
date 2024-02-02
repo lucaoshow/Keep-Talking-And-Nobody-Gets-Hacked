@@ -198,6 +198,7 @@ func _cdMultipleDirs(dirs : Array[String], terminal : Terminal):
 	self.previousDirs.append(self.currentDir)
 	self.currentDir = previousDir
 	self.previousDirs.append_array(dirs)
+	self.previousDirs.pop_back()
 	terminal.navigateToDir("\\".join(dirs))
 
 
