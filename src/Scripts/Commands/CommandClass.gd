@@ -243,7 +243,7 @@ func _config(terminal : Terminal):
 
 func _ls(terminal : Terminal):
 	if (!Directories.directories[self.currentDir].size()):
-		self._writeToTerminal(terminal, "You don't have permission to access that information.")
+		self._writeToTerminal(terminal, "You don't have permission to access that information.\n")
 		return
 
 	self._writeToTerminal(terminal, self._getFormattedLsText())
