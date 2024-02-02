@@ -11,6 +11,9 @@ signal buttons
 
 @onready var startTimer : Timer = Timer.new()
 @onready var deleteTimer : Timer =  Timer.new()
+@onready var explosion : PackedScene = preload("res://Scenes/Explosion.tscn")
+var _explosionCount : int = 0
+const EXPLOSION_POSITIONS : Array[Vector2] = [Vector2(-328, -64), Vector2(192, -56), Vector2(32, 64), Vector2(-88, -136)]
 
 var _deleting : bool = false
 var _helped : bool = false
@@ -71,6 +74,18 @@ func setPlayerTerminal(playerTerminal : Terminal):
 # PRIVATE METHODS
 
 
+func _explode():
+	for i in range(len(self.EXPLOSION_POSITIONS)):
+		var e = self.explosion.instantiate()
+		e.position = self.EXPLOSION_POSITIONS[i]
+		e.connect("animation_finished", self.onExploded.bind(e))
+		self._startNewTimer((i + 0.1) * 0.5, self._createExplosion.bind(e))
+
+
+func _createExplosion(anim):
+	self.add_child(anim)
+
+
 func _canWrite():
 	return !super.isWriting() and !self._deleting and self.deleteTimer.is_stopped()
 
@@ -82,7 +97,7 @@ func _write(text : String, erasable : bool = false):
 			self.deleteTimer.start()
 
 
-func _startNewTimer(waitTime : int, timeoutCall : Callable):
+func _startNewTimer(waitTime : float, timeoutCall : Callable):
 	var timer : Timer = Timer.new()
 	timer.one_shot = true
 	timer.wait_time = waitTime
@@ -96,7 +111,7 @@ func _getTerminalFormat(text : String):
 
 
 func _introduce():
-	self._write(self._getTerminalFormat("echosec init\n"))
+	self._write(self._getTerminalFormat("echosec  init\n"))
 
 
 func _delete():
@@ -109,7 +124,7 @@ func _delete():
 
 
 func _playerBackOneDir(msg : String):
-	super.setWindowText(super.getWindowText() + "back-dir  -n  1  -u  Inteli\n" + msg + "\n" + self._getTerminalFormat(""))
+	super.setWindowText(super.getWindowText() + " back-dir  -n  1  -u  Inteli\n" + msg + "\n" + self._getTerminalFormat(""))
 	self._playerTerminal.togglePause()
 	self._playerTerminal.forceCommand("cd..")
 	self._playerTerminal.togglePause()
@@ -122,7 +137,7 @@ func canAct(condition : bool):
 
 func onStartTimeout():
 	self.start.emit()
-	self._write('HAHAHAHA! Espero que não se importe, mas estou só dando uma espiadinha nos seus arquivos.\nNada demais, sou só um hacker amigável explorando seu sistema!  Prazer!\nVou apenas adicionar uns "temperos especiais" nos seus arquivos. Eles vão pegar um\nresfriadinho ou dois. Na verdade três, mas nada sério!\n\nPra começar, que tal tirarmos algumas das suas permissões?\n' + self._getTerminalFormat("echosec steal-permissions -u Inteli\n"))
+	self._write('HAHAHAHA! Espero que não se importe, mas estou só dando uma espiadinha nos seus arquivos.\nNada demais, sou só um hacker amigável explorando seu sistema!  Prazer!\nVou apenas adicionar uns "temperos especiais" nos seus arquivos. Eles vão pegar um\nresfriadinho ou dois. Na verdade três, mas nada sério!\n\nPra começar, que tal tirarmos algumas das suas permissões?\n' + self._getTerminalFormat("echosec  steal-permissions  -u  Inteli\n"))
 	self._startNewTimer(7, self.onStealPermissionsTimeout)
 
 
@@ -180,7 +195,7 @@ func onUsers():
 
 func onScanningNetwork():
 	if (self.canAct(!self._scanned)):
-		self._write("Ei, o que você tá fazendo aí? Pode parando com isso!\n" + self._getTerminalFormat("generate-popups\n") + self._getTerminalFormat(""))
+		self._write("Ei, o que você tá fazendo aí? Pode parando com isso!\n" + self._getTerminalFormat(" generate-popups\n") + self._getTerminalFormat(""))
 		self.popUps.emit()
 		self._scanned = true
 
@@ -193,15 +208,15 @@ func onRemoveWrongFile():
 
 func onRemoveRightFile():
 	if (self.canAct(self._removedRight == 0)):
-		self._write("Ei! Isso era arte digital! Você acabou de deletar um dos meus vírus favoritos.\n" + self._getTerminalFormat("shrink -s 30 -u Inteli\n") + 'Shrinking "Inteli" terminal...\n')
+		self._write("Ei! Isso era arte digital! Você acabou de deletar um dos meus vírus favoritos.\n" + self._getTerminalFormat(" shrink  -s  30  -u  Inteli\n") + 'Shrinking "Inteli" terminal...\n')
 		self._startNewTimer(3, self.onShrinkingRequestTimeout)
 	if (self.canAct(self._removedRight == 1)):
-		self._write("Para com isso! Assim você vai acabar com todos eles!\n" + self._getTerminalFormat("generate-popups\n") + self._getTerminalFormat(""))
+		self._write("Para com isso! Assim você vai acabar com todos eles!\n" + self._getTerminalFormat(" generate-popups\n") + self._getTerminalFormat(""))
 		self.popUps.emit()
 	if (self.canAct(self._removedRight == 2)):
+		self._explode()
 		self._write("NAOOOOOOOOOOOO! MEUS BEBÊS...", false)
 		self.playerWin.emit()
-		self._startNewTimer(4, self.onPlayerWin)
 	self._removedRight += 1
 
 
@@ -220,7 +235,7 @@ func onBack():
 
 func onAnalysis():
 	if (self.canAct(!self._analysed)):
-		self._write("Ei, tira o olho daí!\n" + self._getTerminalFormat("generate-popups\n") + self._getTerminalFormat(""))
+		self._write("Ei, tira o olho daí!\n" + self._getTerminalFormat(" generate-popups\n") + self._getTerminalFormat(""))
 		self.popUps.emit()
 		self._analysed = true
 
@@ -237,5 +252,9 @@ func onEnterDirectory():
 	self._enteredDir += 1
 
 
-func onPlayerWin():
-	self.queue_free()
+func onExploded(anim):
+	self._explosionCount += 1
+	anim.queue_free()
+	if (self._explosionCount == len(self.EXPLOSION_POSITIONS)):
+		self.queue_free() 
+
