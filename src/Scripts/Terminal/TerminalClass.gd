@@ -2,7 +2,9 @@ extends WindowDisplay
 class_name Terminal
 
 
-const _TYPING_SPACE_LIMIT_OFFSET : float = 330
+signal entered
+
+const _TYPING_SPACE_LIMIT_OFFSET : float = 270
 const _TYPING_SPACE_MAX_CHARS : int = 80
 
 var TERMINAL_PATH : String = "C:\\>"
@@ -12,12 +14,16 @@ var _typingSpace : LineEdit = LineEdit.new()
 var _OnEnterCommandYOffset : float
 var _originalTypingSpacePos : Vector2
 
-func _init():
+
+# CONSTRUCTOR
+
+func _init(commandExecuter : Commands):
+	self._commandExecuter = commandExecuter
 	self.add_child(_commandExecuter)
 
 	const texture : CompressedTexture2D = preload("res://Assets/Terminal/terminal.png")
 	const font : FontFile = preload("res://Assets/Terminal/Determination.ttf")
-	const fontSize : int = 18
+	const fontSize : int = 15
 	const terminalFontColor : Color = Color8(242, 240, 228, 255)
 
 	super._init(texture, font, fontSize, terminalFontColor)
@@ -40,7 +46,12 @@ func _init():
 	self._OnEnterCommandYOffset = super.getEnterYOffset()
 
 
+func _ready():
+	self.entered.emit()
+
+
 # UPDATE PER FRAME
+
 func _process(delta):
 	super._process(delta)
 	if super.isWriting():
@@ -65,7 +76,6 @@ func returnToOriginalPos():
 func goBackOneDir():
 	var index : int = self.TERMINAL_PATH.rfind("\\")
 	var charsToDelete : int = (len(self.TERMINAL_PATH)) - index
-	print(self.TERMINAL_PATH.erase(index, charsToDelete))
 	self.TERMINAL_PATH = self.TERMINAL_PATH.erase(index, charsToDelete)
 	if (self.TERMINAL_PATH[-1] == ":"):
 		self.TERMINAL_PATH += "\\"
@@ -79,6 +89,10 @@ func navigateToDir(dir : String):
 	self.TERMINAL_PATH[-1] = "\\"
 	self.TERMINAL_PATH += dir + ">"
 	self._resetTypingSpaceText()
+
+
+func forceCommand(command : String):
+	self._enterCommand(self._typingSpace.text + command)
 
 
 # PRIVATE METHODS

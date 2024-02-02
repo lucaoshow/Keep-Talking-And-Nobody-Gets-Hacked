@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://c18bja25ljk8w"]
+
+[ext_resource type="Texture2D" uid="uid://bi6ctghoqafc0" path="res://Assets/Desktop/menu.png" id="1_tv2kn"]
+[ext_resource type="Script" path="res://Scripts/Menu.gd" id="2_7jrs8"]
+
+[node name="Menu" type="Sprite2D"]
+position = Vector2(224, 464)
+texture = ExtResource("1_tv2kn")
+script = ExtResource("2_7jrs8")
+
+[node name="Fake" type="Button" parent="."]
+offset_left = -228.0
+offset_top = -193.0
+offset_right = 228.0
+offset_bottom = 222.0
+flat = true
+
+[node name="Off" type="Button" parent="."]
+offset_left = 76.0
+offset_top = 229.0
+offset_right = 105.0
+offset_bottom = 259.0
+flat = true
+
+[connection signal="button_up" from="Off" to="." method="_on_off_button_up"]

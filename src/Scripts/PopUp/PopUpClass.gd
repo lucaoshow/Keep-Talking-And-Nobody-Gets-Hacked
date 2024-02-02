@@ -10,7 +10,8 @@ func _init():
 	var popUpTextureDir : String = WindowUtils.getRandomPopUpTextureDirectory()
 	var files : Array = Array(DirAccess.get_files_at(assetsPath + popUpTextureDir))
 
-	files = files.filter(func(x : String): return false if x[-1] == "t" else true)
+	#files = files.filter(func(x : String): return false if x[-1] == "t" else true) # RUN LOCAL
+	files = files.map(func(x : String): return x.substr(0, x.rfind("."))) # DEPLOY
 
 	var texture : CompressedTexture2D = load(assetsPath + popUpTextureDir + "/" + files[0])
 	# irrelevant (no labels in pop-ups)

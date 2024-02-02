@@ -2,27 +2,26 @@ extends Node2D
 class_name WindowDisplay
 
 
-const _ENTER_Y_OFFSET : float = 43.5
-const _WINDOW_TEXT_LIMIT_OFFSET : float = 250
+const _ENTER_Y_OFFSET : float = 36
+var _windowTextLimitOffset : float = 190
 
 var _writing : bool = false
 var _paused : bool = false
 
-var _moving : bool = false
 var _resizing : bool = false
 
 var _windowSprite : Sprite2D = Sprite2D.new()
 var _windowText : Label = Label.new()
 var _taskbarText : String
 var _windowAnimatedSprite : AnimatedSprite2D
+var _closeButton : Button
+
+var _originalScale : Vector2
 
 var _targetScaleX : float
 var _targetScaleY : float
 var _tResize : float
-var _tMove : float
-var _targetPosition : Vector2
 var _elapsedTimeResize : float
-var _elapsedTimeMove : float
 var _originalWindowTextSize : Vector2
 
 # CONSTRUCTOR
@@ -30,14 +29,15 @@ var _originalWindowTextSize : Vector2
 func _init(windowTexture : CompressedTexture2D, font : FontFile, fontSize : int, fontColor : Color):
 	self._windowSprite.texture = windowTexture
 	self.add_child(self._windowSprite)
+	self._originalScale = self._windowSprite.scale
 
 	WindowUtils.configureWindowTextObj(self._windowText, font, fontSize, self._windowSprite.get_rect(), fontColor)
 	self._windowSprite.add_child(self._windowText)
 	self._originalWindowTextSize = self._windowText.size
 
-	var closeButton : Button = WindowUtils.generateWindowCloseButton(_windowSprite.get_rect().size)
-	closeButton.connect("button_up", self.closeWindow)
-	self.add_child(closeButton)
+	self._closeButton = WindowUtils.generateWindowCloseButton(_windowSprite.get_rect().size)
+	self._closeButton.connect("button_up", self.closeWindow)
+	self.add_child(self._closeButton)
 
 
 # UPDATE PER FRAME
@@ -48,9 +48,6 @@ func _process(delta):
 
 	if self._resizing:
 		self._scale(delta)
-
-	if self._moving:
-		self._reposition(delta)
 
 	if self._textIsBiggerThanWindow():
 		self._eraseBeggining()
@@ -65,10 +62,8 @@ func resize(widthPercentage : float, heightPercentage : float, t : float):
 	self._resizing = true
 
 
-func moveTo(pos : Vector2, t : float):
-	self._targetPosition = pos
-	self._tMove = t
-	self._moving = true
+func returnToOriginalSize():
+	self.resize(self._originalScale.x / self._windowSprite.scale.x, self._originalScale.y / self._windowSprite.scale.y, 1)
 
 
 func writeAnimatedText(text : String):
@@ -79,6 +74,10 @@ func writeAnimatedText(text : String):
 
 func togglePause():
 	self._paused = !self._paused 
+
+
+func freeCloseButton():
+	self._closeButton.queue_free()
 
 
 func addChild(child : Object):
@@ -118,9 +117,13 @@ func setTaskbarText(text : String):
 	self._taskbarText = text
 
 
+func setWindowTextLimitOffset(value : int):
+	self._windowTextLimitOffset = value
+
+
 func setWindowText(text : String):
 	self._windowText.text = text
-	self._windowText.visible_characters = -1
+	self._windowText.visible_characters = len(self._windowText.text)
 
 
 func isWriting():
@@ -151,19 +154,12 @@ func _scale(delta : float):
 	self._checkActionFinished(self._tResize)
 
 
-func _reposition(delta : float):
-	var tPerFrame : float = self._tMove * delta
-	self._elapsedTimeMove += tPerFrame
-	position = position.lerp(self._targetPosition, tPerFrame)
-	self._checkActionFinished(self._tMove)
-
-
 func _isInsideWindow(pos : Vector2):
 	return self._windowSprite.get_rect().has_point(pos)
 
 
 func _textIsBiggerThanWindow():
-	return self._windowText.size.y + self._WINDOW_TEXT_LIMIT_OFFSET >= self.getSpriteHeight()
+	return self._windowText.size.y + self._windowTextLimitOffset >= self.getSpriteHeight()
 
 
 func _eraseBeggining():
@@ -179,10 +175,6 @@ func _checkActionFinished(t : float):
 	if self._elapsedTimeResize >= t and t == self._tResize:
 		self._resizing = false
 		self._elapsedTimeResize = 0
-
-	if self._elapsedTimeMove >= t and t == self._tMove:
-		self._moving = false
-		self._elapsedTimeMove = 0
 
 
 func _checkWritingEnd():

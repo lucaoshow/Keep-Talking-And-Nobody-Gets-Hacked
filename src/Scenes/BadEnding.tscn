@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://673fwgudrfeb"]
+
+[ext_resource type="Script" path="res://Scripts/BadEnding.gd" id="1_fgbrp"]
+[ext_resource type="FontFile" uid="uid://nywtust0op3w" path="res://Assets/Terminal/Determination.ttf" id="2_hl48v"]
+
+[node name="BadEnding" type="Node2D"]
+script = ExtResource("1_fgbrp")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1368.0
+offset_bottom = 768.0
+color = Color(0.00784314, 0.00784314, 0.00784314, 1)
+
+[node name="Retry" type="Button" parent="."]
+offset_left = 40.0
+offset_top = 672.0
+offset_right = 158.0
+offset_bottom = 732.0
+theme_override_fonts/font = ExtResource("2_hl48v")
+theme_override_font_sizes/font_size = 50
+text = "Retry"
+flat = true
+
+[node name="Label" type="Label" parent="."]
+offset_left = 80.0
+offset_top = 352.0
+offset_right = 1257.0
+offset_bottom = 404.0
+theme_override_fonts/font = ExtResource("2_hl48v")
+theme_override_font_sizes/font_size = 50
+text = "Error: Critical system file \"system.dll\" could not be found."
+
+[connection signal="button_up" from="Retry" to="." method="_on_retry_button_up"]

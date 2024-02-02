@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=3 uid="uid://cx77s5rtqgjn5"]
+
+[ext_resource type="Script" path="res://Scripts/TurnOff.gd" id="1_5qf6l"]
+[ext_resource type="Texture2D" uid="uid://bq83o611lfidq" path="res://Assets/TurningOff/defeat.jpeg" id="2_6kk0g"]
+[ext_resource type="FontFile" uid="uid://nywtust0op3w" path="res://Assets/Terminal/Determination.ttf" id="2_ibf3l"]
+[ext_resource type="Texture2D" uid="uid://dt5i5wsl316ub" path="res://Assets/TurningOff/logoff.png" id="2_l451u"]
+
+[node name="TurnOff" type="Node2D"]
+script = ExtResource("1_5qf6l")
+
+[node name="Defeat" type="Sprite2D" parent="."]
+position = Vector2(684, 384)
+scale = Vector2(1.06875, 1.06667)
+texture = ExtResource("2_6kk0g")
+
+[node name="Retry" type="Button" parent="."]
+offset_left = 40.0
+offset_top = 672.0
+offset_right = 158.0
+offset_bottom = 744.0
+theme_override_fonts/font = ExtResource("2_ibf3l")
+theme_override_font_sizes/font_size = 50
+text = "Retry"
+flat = true
+
+[node name="Black" type="ColorRect" parent="."]
+modulate = Color(0, 0, 0, 1)
+offset_right = 1368.0
+offset_bottom = 768.0
+color = Color(0, 0, 0, 1)
+
+[node name="Logoff" type="Sprite2D" parent="."]
+position = Vector2(684, 384)
+scale = Vector2(1.78824, 1.34031)
+texture = ExtResource("2_l451u")
+
+[node name="ShowDefeat" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
+
+[connection signal="button_up" from="Retry" to="." method="_on_retry_button_up"]
+[connection signal="timeout" from="ShowDefeat" to="." method="_on_show_defeat_timeout"]

@@ -11,14 +11,14 @@ config_version=5
 [application]
 
 config/name="Onboarding-Inteli"
-run/main_scene="res://Scenes/Main.tscn"
+run/main_scene="res://Scenes/TurnOn.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.png"
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
+window/size/viewport_width=1366
+window/size/viewport_height=768
 window/size/resizable=false
 
 [filesystem]
