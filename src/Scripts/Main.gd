@@ -17,6 +17,7 @@ var menuPresent : bool = false
 @onready var hackerId = hacker.get_instance_id()
 
 func _ready():
+	Directories.resetDirectories()
 	$CMD.disabled = true
 	$RecycleBin.disabled = true
 	$LoL.disabled = true
