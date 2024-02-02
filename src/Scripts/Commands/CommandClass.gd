@@ -33,11 +33,11 @@ const FRW_TEXT : Array[String] = ["Removing user from network...\n", "User succe
 	"Error: removed self from network. Reseting network configurations...\n", "Configurations successfully reset.\n"]
 
 const CONFIG_STRING : String = """Host Name:                                USER_01
-	ProductID:                          7852-0413-4411-ECSGMLB
+	ProductID:                              7852-0413-4411-ECSGMLB
 	System Fabricator:              GAMELAB_GP
 	System Model:                         ECS0001
 	System Type:                           x32
-	Network Mask:                         192.168.1.0/16"""
+	Network IPV4:                         192.168.1.0/24"""
 
 const IP_ADDRESS : String = "192.168.1.0/24"
 
@@ -265,7 +265,7 @@ func _cdCommand(command : String, terminal : Terminal):
 
 
 func _exiftool(command : String, terminal : Terminal):
-	var errorMsg : String = 'File not found in current directory. Type "ls" to see the list of available files.'
+	var errorMsg : String = 'File not found in current directory.'
 	
 	if (self._isCommandEmpty(command, 10)):
 		self._displayErrorMessage(terminal, errorMsg)
@@ -281,7 +281,7 @@ func _exiftool(command : String, terminal : Terminal):
 
 
 func _removeCommand(command : String, terminal : Terminal):
-	var errorMsg : String = 'Directory or file not found in current directory. Type "ls" to see the list of available files.'
+	var errorMsg : String = 'Directory or file not found in current directory.'
 
 	if (self._isCommandEmpty(command, 4)):
 		self._displayErrorMessage(terminal, errorMsg)
@@ -336,7 +336,7 @@ func _find(command : String, terminal : Terminal):
 
 
 func _nmapCommand(command : String, terminal : Terminal):
-	var errorMsg : String = 'Unknown IP address. Type "config" to see the IP address of the current network'
+	var errorMsg : String = 'Unknown IP address. Type "config" to see the IP address of the network'
 
 	if (self._isCommandEmpty(command, 6)):
 		self._displayErrorMessage(terminal, errorMsg)
@@ -376,7 +376,6 @@ func _frwCommand(command : String, terminal : Terminal):
 		self.ipAddresses.erase(self.hackerIp)
 		self.hackerOutTimer.start()
 		self.hackerOut.emit()
-		return
 
 	if (ip == self.randomIp):
 		self._removeFromNmapText(self.randomIp)

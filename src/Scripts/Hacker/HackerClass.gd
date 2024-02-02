@@ -13,7 +13,8 @@ signal buttons
 @onready var deleteTimer : Timer =  Timer.new()
 @onready var explosion : PackedScene = preload("res://Scenes/Explosion.tscn")
 var _explosionCount : int = 0
-const EXPLOSION_POSITIONS : Array[Vector2] = [Vector2(-328, -64), Vector2(192, -56), Vector2(32, 64), Vector2(-88, -136)]
+var _originalPos : Vector2
+const EXPLOSION_POSITIONS : Array[Vector2] = [Vector2(-328, -64), Vector2(192, -56), Vector2(32, 64), Vector2(-88, -136), Vector2(-50, 60)]
 
 var _deleting : bool = false
 var _helped : bool = false
@@ -22,6 +23,7 @@ var _users : bool = false
 var _removedWrong : bool = false
 var _analysed : bool = false
 var _canAct : bool = true
+var _winCondition : bool = false
 var _removedRight : int = 0
 var _enteredDir : int = 0
 var _terminalCount : int = 0
@@ -70,6 +72,9 @@ func _process(delta):
 func setPlayerTerminal(playerTerminal : Terminal):
 	self._playerTerminal = playerTerminal
 
+
+func setOriginalPos(pos : Vector2):
+	self._originalPos = pos
 
 # PRIVATE METHODS
 
@@ -137,7 +142,7 @@ func canAct(condition : bool):
 
 func onStartTimeout():
 	self.start.emit()
-	self._write('HAHAHAHA! Espero que não se importe, mas estou só dando uma espiadinha nos seus arquivos.\nNada demais, sou só um hacker amigável explorando seu sistema!  Prazer!\nVou apenas adicionar uns "temperos especiais" nos seus arquivos. Eles vão pegar um\nresfriadinho ou dois. Na verdade três, mas nada sério!\n\nPra começar, que tal tirarmos algumas das suas permissões?\n' + self._getTerminalFormat("echosec  steal-permissions  -u  Inteli\n"))
+	self._write('HAHAHAHA!  Espero que não se importe, mas estou só dando uma espiadinha nos seus arquivos.\nNada demais, sou só um hacker amigável explorando seu sistema!  Prazer!\nVou apenas adicionar uns "temperos especiais" nos seus arquivos. Eles vão pegar um\nresfriadinho ou dois. Na verdade três, mas nada sério!\n\nPra começar, que tal tirarmos algumas das suas permissões?\n' + self._getTerminalFormat("echosec  steal-permissions  -u  Inteli\n"))
 	self._startNewTimer(7, self.onStealPermissionsTimeout)
 
 
@@ -161,9 +166,10 @@ func onShrinkTimeout():
 
 
 func onOutTimeout():
-	self.visible = false
 	self._canAct = false
+	self.global_position = Vector2(2000, 2000)
 	self.visibility.emit()
+	self._winCondition = true
 
 
 func onPlayerOpenTerminal():
@@ -202,35 +208,42 @@ func onScanningNetwork():
 
 func onRemoveWrongFile():
 	if (self.canAct(!self._removedWrong)):
-		self._write("Hahaha! Era isso que você queria apagar? Sério? Tente de novo, noob!", true)
+		self._write("Hahaha!  Era isso que você queria apagar? Sério? Tente de novo, noob!", true)
 		self._removedWrong = true
 
 
 func onRemoveRightFile():
 	if (self.canAct(self._removedRight == 0)):
-		self._write("Ei! Isso era arte digital! Você acabou de deletar um dos meus vírus favoritos.\n" + self._getTerminalFormat(" shrink  -s  30  -u  Inteli\n") + 'Shrinking "Inteli" terminal...\n')
+		self._write("Ei!  Isso era arte digital!  Você acabou de deletar um dos meus vírus favoritos.\n" + self._getTerminalFormat(" shrink  -s  30  -u  Inteli\n") + 'Shrinking "Inteli" terminal...\n')
 		self._startNewTimer(3, self.onShrinkingRequestTimeout)
 	if (self.canAct(self._removedRight == 1)):
-		self._write("Para com isso! Assim você vai acabar com todos eles!\n" + self._getTerminalFormat(" generate-popups\n") + self._getTerminalFormat(""))
+		self._write("Para com isso!  Assim você vai acabar com todos eles!\n" + self._getTerminalFormat(" generate-popups\n") + self._getTerminalFormat(""))
 		self.popUps.emit()
-	if (self.canAct(self._removedRight == 2)):
-		self._explode()
-		self._write("NAOOOOOOOOOOOO! MEUS BEBÊS...", false)
+	if (self._removedRight == 2 and self._winCondition):
 		self.playerWin.emit()
+	if (self.canAct(self._removedRight == 2)):
+		self._write("NAOOOOOOOOOOOO!  VOCÊ ACABOU COM TODOS...\nPor favor, só não me tire da rede agora... Eu não tenho para onde ir!\n" + self._getTerminalFormat(""))
+		self._winCondition = true
 	self._removedRight += 1
 
 
 func onOut():
-	self._write("Ei, vamos conversar sobre isso! Não precisa me desconectar. Sou um hacker\nmuito legal, prometo! Vamos fazer um acordo, que tal? Eu até paro\nde infectar seus arquivos... por enquanto.")
-	self._startNewTimer(12, self.onOutTimeout)
+	if (self._winCondition):
+		self._explode()
+		self._write("Maldito!!!  Eu vou voltar!!!  Pode esperar por mim!")
+		self.playerWin.emit()
+		return
+	self._write("Ei, vamos conversar sobre isso!  Não precisa me desconectar. Sou um hacker muito\nlegal, prometo!  Vamos fazer um acordo, que tal? Eu até paro de infectar\nseus arquivos... por enquanto.\n")
+	self._startNewTimer(15, self.onOutTimeout)
 
 
 func onBack():
 	super.setWindowText(self._getTerminalFormat(""))
-	self.visible = true
 	self._canAct = true
+	self.position = self._originalPos
 	self.visibility.emit()
-	self._write("Ei, isso foi esperto! Mas você acha que já acabou? Hahaha. Eu voltei!  :)", true)
+	self._winCondition = false
+	self._write("Ei, isso foi esperto!  Mas você acha que já acabou? Hahaha. Eu voltei!  :)", true)
 
 
 func onAnalysis():
