@@ -28,13 +28,13 @@ func goUp():
 
 
 func getPoints():
-	return str($LoadingBar.max_value - $LoadingBar.value + 460)
+	return str($LoadingBar.max_value - $LoadingBar.value + 400)
 
 
 func updateTime():
 	seconds -= 1
 	if (seconds < 0 and minutes > 0):
-		seconds = 59 + seconds
+		seconds = 59 + (seconds + 1)
 		minutes -= 1
 	time.text = "Remaining time: " + str("%02d" % minutes) + ":" + str("%02d" % seconds)
 	if (!emitted and minutes == 1):
