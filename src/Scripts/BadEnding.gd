@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var turnOn : PackedScene = preload("res://Scenes/TurnOn.tscn")
+@onready var turnOn : PackedScene = load("res://Scenes/TurnOn.tscn")
 
 
 func _on_retry_button_up():

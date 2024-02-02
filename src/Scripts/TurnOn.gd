@@ -1,7 +1,6 @@
 extends Node2D
 
-@onready var main : PackedScene = preload("res://Scenes/Main.tscn")
-
+@onready var main : PackedScene = load("res://Scenes/Main.tscn")
 
 func _on_login_button_button_up():
 	$Login.hide()

@@ -10,10 +10,10 @@ var menuPresent : bool = false
 @onready var taskbar : Taskbar = $Taskbar
 @onready var loadingWindow = $LoadingWindow
 @onready var hacker : Hacker = Hacker.new()
-@onready var badEndingScene : PackedScene = preload("res://Scenes/BadEnding.tscn")
-@onready var loseScene : PackedScene = preload("res://Scenes/TurnOff.tscn")
-@onready var winScene = preload("res://Scenes/WinPopUp.tscn").instantiate()
-@onready var menuScene : PackedScene = preload("res://Scenes/Menu.tscn")
+@onready var badEndingScene : PackedScene = load("res://Scenes/BadEnding.tscn")
+@onready var loseScene : PackedScene = load("res://Scenes/TurnOff.tscn")
+@onready var winScene = load("res://Scenes/WinPopUp.tscn").instantiate()
+@onready var menuScene : PackedScene = load("res://Scenes/Menu.tscn")
 @onready var hackerId = hacker.get_instance_id()
 
 func _ready():
