@@ -12,7 +12,7 @@ const Y_POS : int = 625
 var emitted : bool = false
 var goingUp : bool = false
 var seconds : int = 59
-var minutes : int = 8
+var minutes : int = 9
 
 func startLoading():
 	counter.start()

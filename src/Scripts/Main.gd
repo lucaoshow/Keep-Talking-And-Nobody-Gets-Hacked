@@ -14,11 +14,12 @@ var menuPresent : bool = false
 @onready var loseScene : PackedScene = preload("res://Scenes/TurnOff.tscn")
 @onready var winScene = preload("res://Scenes/WinPopUp.tscn").instantiate()
 @onready var menuScene : PackedScene = preload("res://Scenes/Menu.tscn")
-
+@onready var hackerId = hacker.get_instance_id()
 
 func _ready():
 	$CMD.disabled = true
 	$RecycleBin.disabled = true
+	$LoL.disabled = true
 
 
 func win():
@@ -43,6 +44,7 @@ func hackerEntered():
 func activateButtons():
 	$CMD.disabled = false
 	$RecycleBin.disabled = false
+	$LoL.disabled = false
 
 
 func toggleHackerWindow():
@@ -76,6 +78,7 @@ func _on_start_timeout():
 	hacker.playerWin.connect(win)
 	hacker.buttons.connect(activateButtons)
 	hacker.position = HACKER_POS
+	hacker.setOriginalPos(hacker.position)
 	windows.append(hacker)
 	add_child(hacker)
 
@@ -112,8 +115,12 @@ func _on_child_exiting_tree(node):
 		taskbar.onRemoveWindow(node.get_instance_id())
 
 
+func isHacker(node : Node):
+	return node.id == hackerId
+
+
 func _on_taskbar_child_exiting_tree(node):
-	if isTaskbarWindow(node):
+	if isTaskbarWindow(node) and !isHacker(node):
 		freeCorrespondentWindow(node.id)
 
 
