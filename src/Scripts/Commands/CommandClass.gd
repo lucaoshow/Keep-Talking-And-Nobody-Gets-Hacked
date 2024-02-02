@@ -195,6 +195,7 @@ func _cdMultipleDirs(dirs : Array[String], terminal : Terminal):
 			continue
 		self._displayErrorMessage(terminal, 'Directory not found. Type "ls" to see the list of available directories.')
 		return
+	self.previousDirs.append(self.currentDir)
 	self.currentDir = previousDir
 	self.previousDirs.append_array(dirs)
 	terminal.navigateToDir("\\".join(dirs))
