@@ -1,11 +1,10 @@
 extends Node2D
 
 var transitioning : bool = false
-@onready var turnOn : PackedScene = preload("res://Scenes/TurnOn.tscn")
+@onready var turnOn : PackedScene = load("res://Scenes/TurnOn.tscn")
 
 func _ready():
 	$ShowDefeat.start()
-
 
 
 func _on_show_defeat_timeout():
