@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://dbaay41yvv5yg"]
+
+[ext_resource type="Script" path="res://Scripts/TurnOn.gd" id="1_5t5ps"]
+[ext_resource type="Texture2D" uid="uid://ct3pfrariue0k" path="res://Assets/TurningOn/turning_on.png" id="2_i8q7i"]
+[ext_resource type="Texture2D" uid="uid://dobwet3cc0ldl" path="res://Assets/TurningOn/login.png" id="2_ro0wp"]
+
+[node name="TurnOn" type="Node2D"]
+script = ExtResource("1_5t5ps")
+
+[node name="TurningOn" type="Sprite2D" parent="."]
+position = Vector2(684.75, 384.75)
+scale = Vector2(1.78627, 1.3377)
+texture = ExtResource("2_i8q7i")
+
+[node name="Login" type="Sprite2D" parent="."]
+position = Vector2(684, 384)
+scale = Vector2(1.8, 1.33798)
+texture = ExtResource("2_ro0wp")
+
+[node name="LoginButton" type="Button" parent="Login"]
+offset_left = -198.0
+offset_top = 24.0
+offset_right = 140.0
+offset_bottom = 108.0
+flat = true
+
+[node name="Transition" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[connection signal="button_up" from="Login/LoginButton" to="." method="_on_login_button_button_up"]
+[connection signal="timeout" from="Transition" to="." method="_on_transition_timeout"]

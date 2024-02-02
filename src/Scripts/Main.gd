@@ -3,11 +3,13 @@ extends Node2D
 const HACKER_POS : Vector2 =  Vector2(1023, 153)
 const PLAYER_POS : Vector2 = Vector2(416, 530)
 var windows : Array[WindowDisplay]
+var commandExecuters : Array[Commands]
 
 @onready var taskbar : Taskbar = $Taskbar
 @onready var loadingWindow = $LoadingWindow
 @onready var hacker : Hacker = Hacker.new()
 @onready var badEndingScene : PackedScene = preload("res://Scenes/BadEnding.tscn")
+@onready var loseScene : PackedScene = preload("res://Scenes/TurnOff.tscn")
 
 
 func _ready():
@@ -16,10 +18,11 @@ func _ready():
 
 func win():
 	loadingWindow.queue_free()
+	commandExecuters.map(func(x : Commands): x.cancelHackerBackTimer())
 
 
 func lose():
-	get_tree().change_scene_to_packed(badEndingScene) # TODO: OFFICIAL LOSING SCREEN
+	get_tree().change_scene_to_packed(loseScene)
 
 
 func badEnding():
@@ -143,7 +146,16 @@ func _on_cmd_button_up():
 	windows.append(terminal)
 	add_child(terminal)
 	hacker.setPlayerTerminal(terminal)
+	commandExecuters.append(commandExecuter)
 
 
 func _on_off_button_up():
 	get_tree().change_scene_to_packed(badEndingScene)
+
+
+func _on_lol_button_up():
+	if ($ButtonPress.is_stopped()):
+		$ButtonPress.start()
+		return
+	$ButtonPress.stop()
+	showNotAllowed()

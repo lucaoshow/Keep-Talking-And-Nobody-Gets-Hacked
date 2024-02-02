@@ -127,6 +127,11 @@ func executeCommand(command : String, terminal : Terminal):
 	self._displayErrorMessage(terminal, 'Command not found. Type "help" to see the list of available commands.')
 
 
+func cancelHackerBackTimer():
+	if (!self.hackerOutTimer.is_stopped()):
+		self.hackerOutTimer.stop()
+
+
 # PRIVATE METHODS
 
 func _getHelpText():
