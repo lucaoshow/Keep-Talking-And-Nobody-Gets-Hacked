@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://d4dj00snqlgka"]
+[gd_scene load_steps=19 format=3 uid="uid://d4dj00snqlgka"]
 
 [ext_resource type="Script" path="res://Scripts/Main.gd" id="1_hlalw"]
 [ext_resource type="Texture2D" uid="uid://ega7v0n13r1p" path="res://Assets/Wallpaper/background.jpg" id="2_6cu8s"]
+[ext_resource type="Texture2D" uid="uid://bi6ctghoqafc0" path="res://Assets/Desktop/menu.png" id="3_ccqlf"]
 [ext_resource type="Script" path="res://Scripts/Taskbar/TaskbarClass.gd" id="3_evom1"]
 [ext_resource type="Texture2D" uid="uid://bg4u6da7ojcir" path="res://Assets/Wallpaper/taskbar.png" id="3_jqkse"]
 [ext_resource type="Script" path="res://Scripts/Hour/HourCounter.gd" id="4_ei0ga"]
@@ -10,6 +11,9 @@
 [ext_resource type="Texture2D" uid="uid://dclmuiusn43cs" path="res://Assets/LoadingWindow/echosec_logo.jpg" id="6_uoeuy"]
 [ext_resource type="Texture2D" uid="uid://24q0p75pqu57" path="res://Assets/LoadingWindow/ProgressBarContainer.png" id="7_nwi8o"]
 [ext_resource type="Texture2D" uid="uid://bvmxwpsht4cyn" path="res://Assets/LoadingWindow/ProgressBarFillment.png" id="8_1m70u"]
+[ext_resource type="Texture2D" uid="uid://cy2jj8wrk202t" path="res://Assets/Desktop/cmd.png" id="12_8crbn"]
+[ext_resource type="FontFile" uid="uid://dh3vmobr3nsst" path="res://Assets/Taskbar/TaskbarWindow/SEGUISB.TTF" id="13_n0p1t"]
+[ext_resource type="Texture2D" uid="uid://bkwkljqutwb7k" path="res://Assets/Desktop/bin.png" id="14_vbpvq"]
 
 [sub_resource type="SystemFont" id="SystemFont_nh5yx"]
 font_names = PackedStringArray("Tahoma")
@@ -18,40 +22,57 @@ font_names = PackedStringArray("Tahoma")
 font = SubResource("SystemFont_nh5yx")
 font_size = 10
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vae5s"]
+
 [sub_resource type="CanvasTexture" id="CanvasTexture_oj5we"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_hlalw")
 
-[node name="Start" type="Timer" parent="."]
-wait_time = 3.0
-one_shot = true
-autostart = true
-
 [node name="Background" type="Sprite2D" parent="."]
-position = Vector2(640, 360)
-scale = Vector2(1.00235, 1)
+position = Vector2(684, 384)
+scale = Vector2(1.07126, 1.06667)
 texture = ExtResource("2_6cu8s")
+
+[node name="Menu" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(194, 496)
+scale = Vector2(0.850877, 0.885321)
+texture = ExtResource("3_ccqlf")
+
+[node name="Fake" type="Button" parent="Menu"]
+offset_left = -227.0
+offset_top = -195.0
+offset_right = 229.0
+offset_bottom = 220.0
+flat = true
+
+[node name="Off" type="Button" parent="Menu"]
+offset_left = 75.0
+offset_top = 229.0
+offset_right = 104.0
+offset_bottom = 259.0
+flat = true
 
 [node name="Taskbar" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
-offset_top = 688.0
-offset_right = 1280.0
-offset_bottom = 720.0
+offset_top = 736.0
+offset_right = 1368.0
+offset_bottom = 768.0
 script = ExtResource("3_evom1")
 
 [node name="TaskbarImage" type="Sprite2D" parent="Taskbar"]
-position = Vector2(640, 16.75)
-scale = Vector2(0.937043, 1.05172)
+position = Vector2(684, 16.75)
+scale = Vector2(1.00146, 1.05172)
 texture = ExtResource("3_jqkse")
 
 [node name="Hours" type="Label" parent="Taskbar"]
 layout_mode = 0
-offset_left = 1176.0
-offset_top = 2.0
-offset_right = 1214.0
-offset_bottom = 24.0
+offset_left = 1259.0
+offset_top = 1.0
+offset_right = 1297.0
+offset_bottom = 23.0
 scale = Vector2(1.5, 1.5)
 label_settings = SubResource("LabelSettings_rofbn")
 horizontal_alignment = 1
@@ -60,8 +81,15 @@ script = ExtResource("4_ei0ga")
 
 [node name="Counter" type="Timer" parent="Taskbar/Hours"]
 
+[node name="MenuButton" type="Button" parent="Taskbar"]
+layout_mode = 0
+offset_right = 96.0
+offset_bottom = 33.0
+theme_override_styles/focus = SubResource("StyleBoxEmpty_vae5s")
+flat = true
+
 [node name="LoadingWindow" type="Node2D" parent="."]
-position = Vector2(1017, 724)
+position = Vector2(1108, 769)
 script = ExtResource("6_oio3a")
 
 [node name="Background" type="TextureRect" parent="LoadingWindow"]
@@ -80,7 +108,7 @@ offset_left = 6.0
 offset_top = 44.0
 offset_right = 251.0
 offset_bottom = 66.0
-max_value = 420.0
+max_value = 540.0
 nine_patch_stretch = true
 texture_under = ExtResource("7_nwi8o")
 texture_progress = ExtResource("8_1m70u")
@@ -106,9 +134,63 @@ text = "EchoSec Uploader"
 
 [node name="Timer" type="Timer" parent="LoadingWindow"]
 
+[node name="CMD" type="TextureButton" parent="."]
+offset_left = 9.0
+offset_top = 90.0
+offset_right = 76.0
+offset_bottom = 155.0
+texture_normal = ExtResource("12_8crbn")
+texture_disabled = ExtResource("12_8crbn")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Terminal" type="Label" parent="CMD"]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 58.0
+offset_right = 58.0
+offset_bottom = 81.0
+theme_override_fonts/font = ExtResource("13_n0p1t")
+theme_override_font_sizes/font_size = 12
+text = "Terminal"
+
+[node name="RecycleBin" type="TextureButton" parent="."]
+offset_left = 17.0
+offset_top = 16.0
+offset_right = 71.0
+offset_bottom = 66.0
+texture_normal = ExtResource("14_vbpvq")
+texture_disabled = ExtResource("14_vbpvq")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Bin" type="Label" parent="RecycleBin"]
+layout_mode = 0
+offset_left = -3.0
+offset_top = 50.0
+offset_right = 59.0
+offset_bottom = 73.0
+theme_override_fonts/font = ExtResource("13_n0p1t")
+theme_override_font_sizes/font_size = 12
+text = "Recycle Bin"
+
+[node name="Start" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+autostart = true
+
+[node name="ButtonPress" type="Timer" parent="."]
+wait_time = 1.2
+one_shot = true
+
 [connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
 [connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]
-[connection signal="timeout" from="Start" to="." method="_on_start_timeout"]
+[connection signal="button_up" from="Menu/Fake" to="." method="_on_fake_button_up"]
+[connection signal="button_up" from="Menu/Off" to="." method="_on_off_button_up"]
 [connection signal="child_exiting_tree" from="Taskbar" to="." method="_on_taskbar_child_exiting_tree"]
 [connection signal="timeout" from="Taskbar/Hours/Counter" to="Taskbar/Hours" method="_on_counter_timeout"]
+[connection signal="button_up" from="Taskbar/MenuButton" to="." method="_on_menu_button_button_up"]
 [connection signal="timeout" from="LoadingWindow/Timer" to="LoadingWindow" method="_on_timer_timeout"]
+[connection signal="button_up" from="CMD" to="." method="_on_cmd_button_up"]
+[connection signal="button_up" from="RecycleBin" to="." method="_on_recycle_bin_button_up"]
+[connection signal="timeout" from="Start" to="." method="_on_start_timeout"]
