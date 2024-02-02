@@ -196,7 +196,8 @@ func onRemoveRightFile():
 		self._write("Ei! Isso era arte digital! Você acabou de deletar um dos meus vírus favoritos.\n" + self._getTerminalFormat("shrink -s 30 -u Inteli\n") + 'Shrinking "Inteli" terminal...\n')
 		self._startNewTimer(3, self.onShrinkingRequestTimeout)
 	if (self.canAct(self._removedRight == 1)):
-		self._write("Para com isso! Assim você vai acabar com todos eles!", true)
+		self._write("Para com isso! Assim você vai acabar com todos eles!\n" + self._getTerminalFormat("generate-popups\n") + self._getTerminalFormat(""))
+		self.popUps.emit()
 	if (self.canAct(self._removedRight == 2)):
 		self._write("NAOOOOOOOOOOOO! MEUS BEBÊS...", false)
 		self.playerWin.emit()
