@@ -4,21 +4,28 @@ const HACKER_POS : Vector2 =  Vector2(1023, 153)
 const PLAYER_POS : Vector2 = Vector2(416, 530)
 var windows : Array[WindowDisplay]
 var commandExecuters : Array[Commands]
+var menu
+var menuPresent : bool = false
 
 @onready var taskbar : Taskbar = $Taskbar
 @onready var loadingWindow = $LoadingWindow
 @onready var hacker : Hacker = Hacker.new()
 @onready var badEndingScene : PackedScene = preload("res://Scenes/BadEnding.tscn")
 @onready var loseScene : PackedScene = preload("res://Scenes/TurnOff.tscn")
+@onready var winScene = preload("res://Scenes/WinPopUp.tscn").instantiate()
+@onready var menuScene : PackedScene = preload("res://Scenes/Menu.tscn")
 
 
 func _ready():
 	$CMD.disabled = true
 	$RecycleBin.disabled = true
 
+
 func win():
+	winScene.updatePoints(loadingWindow.getPoints())
 	loadingWindow.queue_free()
 	commandExecuters.map(func(x : Commands): x.cancelHackerBackTimer())
+	$Win.start()
 
 
 func lose():
@@ -74,7 +81,10 @@ func _on_start_timeout():
 
 
 func showNotAllowed():
-	return #TODO: show not allowed pop-up
+	var alert : Alert = Alert.new()
+	alert.position = Vector2(672, 376)
+	windows.append(alert)
+	add_child(alert)
 
 
 func isWindowDisplay(node : Node):
@@ -107,10 +117,6 @@ func _on_taskbar_child_exiting_tree(node):
 		freeCorrespondentWindow(node.id)
 
 
-func _on_fake_button_up():
-	showNotAllowed()
-
-
 func _on_recycle_bin_button_up():
 	if ($ButtonPress.is_stopped()):
 		$ButtonPress.start()
@@ -120,7 +126,14 @@ func _on_recycle_bin_button_up():
 
 
 func _on_menu_button_button_up():
-	$Menu.visible = !$Menu.visible
+	if (menuPresent):
+		menu.queue_free()
+		menuPresent = false
+		return
+	menu = menuScene.instantiate()
+	menu.getFakeButton().connect("button_up", self.showNotAllowed)
+	add_child(menu)
+	menuPresent = true
 
 
 func _on_cmd_button_up():
@@ -149,13 +162,13 @@ func _on_cmd_button_up():
 	commandExecuters.append(commandExecuter)
 
 
-func _on_off_button_up():
-	get_tree().change_scene_to_packed(badEndingScene)
-
-
 func _on_lol_button_up():
 	if ($ButtonPress.is_stopped()):
 		$ButtonPress.start()
 		return
 	$ButtonPress.stop()
 	showNotAllowed()
+
+
+func _on_win_timeout():
+	add_child(winScene)

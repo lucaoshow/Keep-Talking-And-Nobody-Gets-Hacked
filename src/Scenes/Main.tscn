@@ -1,8 +1,7 @@
-[gd_scene load_steps=20 format=3 uid="uid://d4dj00snqlgka"]
+[gd_scene load_steps=19 format=3 uid="uid://d4dj00snqlgka"]
 
 [ext_resource type="Script" path="res://Scripts/Main.gd" id="1_hlalw"]
 [ext_resource type="Texture2D" uid="uid://ega7v0n13r1p" path="res://Assets/Wallpaper/background.jpg" id="2_6cu8s"]
-[ext_resource type="Texture2D" uid="uid://bi6ctghoqafc0" path="res://Assets/Desktop/menu.png" id="3_ccqlf"]
 [ext_resource type="Script" path="res://Scripts/Taskbar/TaskbarClass.gd" id="3_evom1"]
 [ext_resource type="Texture2D" uid="uid://bg4u6da7ojcir" path="res://Assets/Wallpaper/taskbar.png" id="3_jqkse"]
 [ext_resource type="Script" path="res://Scripts/Hour/HourCounter.gd" id="4_ei0ga"]
@@ -34,26 +33,6 @@ script = ExtResource("1_hlalw")
 position = Vector2(684, 384)
 scale = Vector2(1.07126, 1.06667)
 texture = ExtResource("2_6cu8s")
-
-[node name="Menu" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(194, 496)
-scale = Vector2(0.850877, 0.885321)
-texture = ExtResource("3_ccqlf")
-
-[node name="Fake" type="Button" parent="Menu"]
-offset_left = -227.0
-offset_top = -195.0
-offset_right = 229.0
-offset_bottom = 220.0
-flat = true
-
-[node name="Off" type="Button" parent="Menu"]
-offset_left = 75.0
-offset_top = 229.0
-offset_right = 104.0
-offset_bottom = 259.0
-flat = true
 
 [node name="Taskbar" type="Control" parent="."]
 layout_mode = 3
@@ -205,10 +184,12 @@ autostart = true
 wait_time = 1.2
 one_shot = true
 
+[node name="Win" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
+
 [connection signal="child_entered_tree" from="." to="." method="_on_child_entered_tree"]
 [connection signal="child_exiting_tree" from="." to="." method="_on_child_exiting_tree"]
-[connection signal="button_up" from="Menu/Fake" to="." method="_on_fake_button_up"]
-[connection signal="button_up" from="Menu/Off" to="." method="_on_off_button_up"]
 [connection signal="child_exiting_tree" from="Taskbar" to="." method="_on_taskbar_child_exiting_tree"]
 [connection signal="timeout" from="Taskbar/Hours/Counter" to="Taskbar/Hours" method="_on_counter_timeout"]
 [connection signal="button_up" from="Taskbar/MenuButton" to="." method="_on_menu_button_button_up"]
@@ -217,3 +198,4 @@ one_shot = true
 [connection signal="button_up" from="RecycleBin" to="." method="_on_recycle_bin_button_up"]
 [connection signal="button_up" from="LoL" to="." method="_on_lol_button_up"]
 [connection signal="timeout" from="Start" to="." method="_on_start_timeout"]
+[connection signal="timeout" from="Win" to="." method="_on_win_timeout"]
