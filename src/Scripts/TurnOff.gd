@@ -16,6 +16,9 @@ func _on_show_defeat_timeout():
 func _process(delta):
 	if (transitioning and $Black.color.a > 0):
 		$Black.color.a -= delta
+	if (transitioning and $Black.color.a <= 0):
+		transitioning = false
+		$Black.queue_free()
 
 
 func _on_retry_button_up():
