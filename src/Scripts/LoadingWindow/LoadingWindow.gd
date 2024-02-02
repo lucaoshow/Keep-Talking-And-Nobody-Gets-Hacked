@@ -27,6 +27,10 @@ func goUp():
 	position -= Vector2(0, 2)
 
 
+func getPoints():
+	return str($LoadingBar.max_value - $LoadingBar.value + 460)
+
+
 func updateTime():
 	seconds -= 1
 	if (seconds < 0 and minutes > 0):

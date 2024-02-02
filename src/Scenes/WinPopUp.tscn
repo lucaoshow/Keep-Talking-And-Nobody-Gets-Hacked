@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://cmjwcpumvfjjr"]
+
+[ext_resource type="Texture2D" uid="uid://cmw7rxyugl6ai" path="res://Assets/WinPopUp/win.png" id="1_jdwag"]
+[ext_resource type="Script" path="res://Scripts/WinPopUp.gd" id="2_dxt8w"]
+[ext_resource type="FontFile" uid="uid://dh3vmobr3nsst" path="res://Assets/Taskbar/TaskbarWindow/SEGUISB.TTF" id="2_ifvqr"]
+
+[node name="WinPopUp" type="Sprite2D"]
+position = Vector2(672, 384)
+texture = ExtResource("1_jdwag")
+script = ExtResource("2_dxt8w")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -352.0
+offset_top = -24.0
+offset_right = 199.0
+offset_bottom = 35.0
+scale = Vector2(1.5, 1.5)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_ifvqr")
+theme_override_font_sizes/font_size = 14
+text = "Threat successfully eliminated from system. Congratulations!
+Points earned: "
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+offset_left = 336.0
+offset_top = -112.0
+offset_right = 373.0
+offset_bottom = -72.0
+flat = true
+
+[connection signal="button_up" from="Button" to="." method="_on_button_button_up"]
