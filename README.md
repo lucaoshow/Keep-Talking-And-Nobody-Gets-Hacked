@@ -1,8 +1,8 @@
-<img alt="Logo" src="./Assets/logo.png" align="center" style="width: 100vw; height: 40vw">
+<img alt="Logo" src="./Assets/logo.png" align="center" style="width: 100vw; height: 30vw">
 
 <div align="center">
 
-# Keep Talking and Nobody <br> Gets Hacked
+# Keep Talking and Nobody Gets Hacked
 
 </div>
 
@@ -18,4 +18,4 @@
 
 ## 👾 O Jogo
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Keep Talking and Nobody Gets Hacked é um *typing game* (jogo baseado em digitação) no qual o jogador precisa se livrar de um hacker e alguns arquivos maliciosos que ele instala no seu computador. Para isso, ele conta com um manual de remoção de ameaças cibernéticas, o terminal do WindowsXP e comandos essenciais. Entretanto, é claro que o hacker não facilita em nada esse processo, e se demorar mais de dez minutos para remover as ameaças, o jogador perde o controle de sua máquina e é derrotado na batalha digital. Por fim, sendo um *typing game*, a digitação correta dos comandos também é muito importante, e erros dão vantagem de tempo ao hacker.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Keep Talking and Nobody Gets Hacked é um *typing game* (jogo baseado em digitação) no qual o jogador precisa se livrar de um hacker e alguns arquivos maliciosos que ele instala no seu computador. Para isso, ele conta com um [manual de remoção de ameaças cibernéticas](./InstructionManual/Manual%20de%20Instruções%20-%20Onboarding%202024.pdf), o terminal do WindowsXP e comandos essenciais. Entretanto, é claro que o hacker não facilita em nada esse processo, e se demorar mais de dez minutos para remover as ameaças, o jogador perde o controle de sua máquina e é derrotado na batalha digital. Por fim, sendo um *typing game*, a digitação correta dos comandos também é muito importante, e erros dão vantagem de tempo ao hacker.
